@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-const AppLayout = () => import('@/views/layout/AppLayout')
+const AppLayout = () => import('@/components/layout/AppLayout')
 const BoardsView = () => import('@/views/BoardsView')
 const ListsView = () => import('@/views/ListsView')
 

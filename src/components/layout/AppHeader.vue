@@ -12,7 +12,7 @@
       >
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title class="font-weight-bold color-white">Menu</v-list-item-title>
+            <v-list-item-title class="font-weight-bold white--text">Menu</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-divider/>
@@ -26,7 +26,7 @@
               <v-icon color="white">{{ link.icon }}</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title class="color-white">{{ link.text }}</v-list-item-title>
+              <v-list-item-title class="white--text">{{ link.text }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
@@ -141,10 +141,6 @@ export default {
 
 .header__title--xs {
   font-size: 18px;
-}
-
-.color-white {
-  color: #FFFFFF;
 }
 
 @font-face {
