@@ -1,71 +1,69 @@
 <template>
   <div>
-      <v-card
-          height="80"
-          outlined
-          v-click-outside="cancelHandler"
-          :class="{ 'card': true, 'card--form': !showForm }"
+    <v-card
+        height="80"
+        outlined
+        v-click-outside="cancelHandler"
+        :class="{ 'card': true, 'card--form': !showForm }"
+    >
+      <div
+          v-if="showForm"
+          class="fill-height pa-2 d-flex flex-column fill-width"
       >
-        <div
-            v-if="showForm"
-            class="fill-height pa-2 d-flex flex-column fill-width"
-        >
-          <div class="d-flex justify-space-between">
-            <v-form
-                class="fill-width"
-                ref="form"
-                @submit.prevent="createHandler"
-            >
-              <v-text-field
-                  autofocus
-                  dense
-                  single-line
-                  v-model="title"
-                  label="Add the board title"
-                  class="text-subtitle-2 ma-0"
-                  @keyup.esc="cancelHandler"
-                  :rules="[validationRules.required]"
-              >
-                <template v-slot:label>
-                  <span class="text-subtitle-2">Add the board title</span>
-                </template>
-              </v-text-field>
-            </v-form>
-            <v-btn
-                icon
-                x-small
-                @click="cancelHandler"
-            >
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </div>
-          <v-btn
-              x-small
-              outlined
-              color="green"
-              :class="{ 'align-self-end': true, 'v-btn--disabled': !isTitleValid(title) }"
-              @click="createHandler"
+        <div class="d-flex justify-space-between">
+          <v-form
+              class="fill-width"
+              ref="form"
+              @submit.prevent="createHandler"
           >
-            <v-icon small>mdi-check</v-icon>
-            Create
+            <v-text-field
+                autofocus
+                dense
+                single-line
+                v-model="title"
+                label="Add the board title"
+                class="text-subtitle-2 ma-0"
+                @keyup.esc="cancelHandler"
+                :rules="[validationRules.required]"
+            >
+              <template v-slot:label>
+                <span class="text-subtitle-2">Add the board title</span>
+              </template>
+            </v-text-field>
+          </v-form>
+          <v-btn
+              icon
+              x-small
+              @click="cancelHandler"
+          >
+            <v-icon>mdi-close</v-icon>
           </v-btn>
         </div>
-        <div
-            v-else
-            class="pa-0 fill-height fill-width d-inline-flex align-center justify-center"
-            @click="showForm = true"
+        <v-btn
+            x-small
+            outlined
+            color="green"
+            :class="{ 'align-self-end': true, 'v-btn--disabled': !isTitleValid(title) }"
+            @click="createHandler"
         >
-          <span class="text-subtitle-2 font-weight-regular card__title">
-            <v-icon
-                small
-                class="card__icon"
-            >
-              mdi-plus
-            </v-icon>
+          <v-icon small>mdi-check</v-icon>
+          Create
+        </v-btn>
+      </div>
+      <span
+          v-else
+          class="fill-height d-flex align-center justify-center text-subtitle-2 font-weight-regular card__title"
+          @click="showForm = true"
+      >
+          <v-icon
+              small
+              class="card__icon"
+          >
+            mdi-plus
+          </v-icon>
             Create a new board
-          </span>
-        </div>
-      </v-card>
+        </span>
+    </v-card>
 
     <ErrorDialog
         :show="showErrorDialog"
@@ -135,7 +133,6 @@ export default {
 }
 
 .card__title {
-  position: relative;
   color: #757575;
 }
 
@@ -145,9 +142,8 @@ export default {
 }
 
 .card__icon {
-  position:absolute;
-  top: 1.5px;
-  left: -20px;
+  top: -1px;
+  left: -2px;
 }
 
 .card:hover .card__icon {
