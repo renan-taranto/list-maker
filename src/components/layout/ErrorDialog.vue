@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     <v-dialog
-        v-model="show"
+        v-model="isVisible"
         width="500"
     >
       <v-card
@@ -38,7 +38,7 @@
           >
             <v-btn
                 text
-                @click="show = false"
+                @click="isVisible = false"
                 color="white"
                 large
                 class="pa-0 red darken-2 fill-width"
@@ -56,20 +56,25 @@
 export default {
   name: "ErrorDialog",
   props: {
+    show: {
+      type: Boolean,
+      default: false,
+      required: true
+    },
     message: {
       type: String,
       default: 'An error has occurred.'
     }
   },
-  data () {
-    return {
-      show: true
-    }
-  },
-  watch: {
-    show (newValue) {
-      if (newValue === false) {
-        this.$emit('dialogClose')
+  computed: {
+    isVisible: {
+      get () {
+        return this.show
+      },
+      set (value) {
+        if (value === false) {
+          this.$emit('dialogClose')
+        }
       }
     }
   }

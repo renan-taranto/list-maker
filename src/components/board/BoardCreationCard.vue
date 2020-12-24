@@ -1,11 +1,10 @@
 <template>
   <div>
-    <v-hover v-slot="{ hover }">
       <v-card
           height="80"
           outlined
           v-click-outside="cancelHandler"
-          :class="{ 'cursor-pointer': !showForm }"
+          :class="{ 'card': true, 'card--form': !showForm }"
       >
         <div
             v-if="showForm"
@@ -15,6 +14,7 @@
             <v-form
                 class="fill-width"
                 ref="form"
+                @submit.prevent="createHandler"
             >
               <v-text-field
                   autofocus
@@ -24,7 +24,6 @@
                   label="Add the board title"
                   class="text-subtitle-2 ma-0"
                   @keyup.esc="cancelHandler"
-                  @keyup.enter="createHandler"
                   :rules="[validationRules.required]"
               >
                 <template v-slot:label>
@@ -51,40 +50,37 @@
             Create
           </v-btn>
         </div>
-        <span
+        <div
             v-else
-            :class="[
-                    'text-subtitle-2',
-                    'font-weight-regular',
-                    'pa-0',
-                    'fill-height',
-                    'fill-width',
-                    'd-inline-flex',
-                    'align-center',
-                    'justify-center',
-                    hover ? 'black--text' : 'grey--text text--darken-1'
-                  ]"
+            class="pa-0 fill-height fill-width d-inline-flex align-center justify-center"
             @click="showForm = true"
         >
-          Create a new board
-        </span>
+          <span class="text-subtitle-2 font-weight-regular card__title">
+            <v-icon
+                small
+                class="card__icon"
+            >
+              mdi-plus
+            </v-icon>
+            Create a new board
+          </span>
+        </div>
       </v-card>
-    </v-hover>
 
     <ErrorDialog
-        v-if="showErrorDialog"
+        :show="showErrorDialog"
         :message="'An error has occurred while creating the board.'"
-        v-on:dialogClose="showErrorDialog = false"
+        @dialogClose="showErrorDialog = false"
     />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 import ErrorDialog from '@/components/layout/ErrorDialog'
 
 export default {
-  name: "CreateBoardCard",
+  name: "BoardCreationCard",
   components: {
     ErrorDialog
   },
@@ -114,7 +110,7 @@ export default {
     },
     async createBoard() {
       try {
-        await this.add({ id: this.nextBoardId(), title: this.title })
+        await this.add(this.title)
       } catch (e) {
         this.showErrorDialog = true
       }
@@ -123,14 +119,40 @@ export default {
       this.title = ''
       this.showForm = false
     },
-    ...mapActions('boards', ['add']),
-    ...mapGetters('boards', ['nextBoardId'])
+    ...mapActions('boards', ['add'])
   }
 }
 </script>
 
 <style scoped>
-.cursor-pointer {
+.card--form {
   cursor: pointer;
 }
+
+.card:hover {
+  border-color: var(--v-secondary-base);
+  transition: border 500ms;
+}
+
+.card__title {
+  position: relative;
+  color: #757575;
+}
+
+.card:hover .card__title {
+  color: var(--v-secondary-base);
+  transition: all 500ms;
+}
+
+.card__icon {
+  position:absolute;
+  top: 1.5px;
+  left: -20px;
+}
+
+.card:hover .card__icon {
+  color: var(--v-secondary-base);
+  transition: all 500ms;
+}
+
 </style>

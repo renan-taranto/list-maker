@@ -10,6 +10,7 @@ export default new Vuetify({
                 primary: '#DA274F',
                 secondary: '#B51E48'
             }
-        }
+        },
+        options: { customProperties: true }
     }
 });
