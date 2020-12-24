@@ -4,7 +4,6 @@
         v-model="drawer"
         absolute
         temporary
-        color="secondary"
     >
       <v-list
           nav
@@ -12,7 +11,22 @@
       >
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title class="font-weight-bold white--text">Menu</v-list-item-title>
+            <v-list-item-title>
+              <v-btn
+                  color="white"
+                  depressed
+                  :ripple="false"
+                  class="header__btn"
+                  to="/"
+              >
+                <v-img
+                    class="header__logo--xs"
+                    :src="logoSrc"
+                    alt="ListMaker"
+                />
+                <span class="header__title header__title--xs">ListMaker</span>
+              </v-btn>
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
         <v-divider/>
@@ -23,10 +37,10 @@
               link
           >
             <v-list-item-icon>
-              <v-icon color="white">{{ link.icon }}</v-icon>
+              <v-icon color="primary">{{ link.icon }}</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title class="white--text">{{ link.text }}</v-list-item-title>
+              <v-list-item-title class="primary--text">{{ link.text }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
@@ -39,20 +53,23 @@
         hide-on-scroll
         class="d-sm-none"
     >
-      <div class="d-flex justify-center align-center">
-        <v-app-bar-nav-icon
-            class="ma-2"
-            @click.stop="drawer = !drawer"
-        ></v-app-bar-nav-icon>
-        <v-btn text>
-          <v-img
-              class="header__logo--xs"
-              :src="logoSrc"
-              alt="ListMaker"
-          />
-          <span class="header__title header__title--xs">ListMaker</span>
-        </v-btn>
-      </div>
+      <v-app-bar-nav-icon
+          class="ma-2"
+          @click.stop="drawer = !drawer"
+      />
+      <v-btn
+          depressed
+          :ripple="false"
+          class="header__btn pa-0"
+          to="/"
+      >
+        <v-img
+            class="header__logo--xs"
+            :src="logoSrc"
+            alt="ListMaker"
+        />
+        <span class="header__title header__title--xs">ListMaker</span>
+      </v-btn>
     </v-app-bar>
 
     <v-app-bar
@@ -67,8 +84,10 @@
         <v-row align="center">
           <v-col cols="6">
             <v-btn
-                text
-                class="ma-6"
+                depressed
+                :ripple="false"
+                class="header__btn"
+                to="/"
             >
               <v-img
                   class="header__logo--sm"
@@ -121,14 +140,18 @@ export default {
 </script>
 
 <style scoped>
+.header__btn:before {
+  display: none; /* Removes v-btn's box shadow on hover */
+}
+
 .header__logo--sm {
   max-height: 60px;
   max-width: 60px;
 }
 
 .header__logo--xs {
-  max-height: 40px;
-  max-width: 40px;
+  max-height: 45px;
+  max-width: 45px;
 }
 
 .header__title {
