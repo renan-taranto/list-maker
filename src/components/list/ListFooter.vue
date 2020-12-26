@@ -39,7 +39,7 @@
           <v-icon small>mdi-close</v-icon>
         </v-btn>
         <v-btn
-            x-small
+            small
             depressed
             @click="addItemHandler"
             :disabled="isItemTitleEmpty"
@@ -108,6 +108,5 @@ export default {
 <style scoped>
 .footer__text-area {
   margin: 5px 3px 5px 3px;
-  line-height: 1em !important;
 }
 </style>
