@@ -7,6 +7,7 @@
         height="80"
         outlined
         class="card"
+        :to="`/board/${board.id}`"
     >
       <v-card-title class="ma-0 pa-2 d-flex justify-space-between">
           <span class="subtitle-1 font-weight-medium text-truncate card__title">

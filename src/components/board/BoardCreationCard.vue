@@ -117,7 +117,7 @@ export default {
       this.title = ''
       this.showForm = false
     },
-    ...mapActions('boards', ['add'])
+    ...mapActions('boards', { add: 'addBoard' })
   }
 }
 </script>
