@@ -19,7 +19,7 @@
       <v-textarea
           autofocus
           outlined
-          placeholder="Add the item title"
+          placeholder="Enter the item title..."
           rows="2"
           background-color="grey lighten-4"
           color="grey lighten-1"
