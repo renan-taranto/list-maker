@@ -9,6 +9,7 @@
         group="lists"
         filter=".list__footer"
         :prevent-on-filter="false"
+        :animation="150"
         class="row row--dense flex-nowrap lists"
         ghost-class="lists--ghost"
         chosen-class="lists--chosen"
@@ -23,7 +24,10 @@
           class="fill-height pa-0 ml-3 list"
           cols="auto"
       >
-        <ListOfItems :list-id="list.id"></ListOfItems>
+        <ListCard :list-id="list.id"></ListCard>
+      </v-col>
+      <v-col class="pa-0 ml-3">
+        <ListCreationButton :board-id="boardId"/>
       </v-col>
     </draggable>
   </v-container>
@@ -31,14 +35,16 @@
 
 <script>
 import draggable from 'vuedraggable'
-import ListOfItems from '@/components/list/ListOfItems'
+import ListCard from '@/components/list/ListCard'
+import ListCreationButton from '@/components/list/ListCreationButton'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: "BoardView",
   components: {
     draggable,
-    ListOfItems
+    ListCard,
+    ListCreationButton
   },
   props: {
     boardId: {

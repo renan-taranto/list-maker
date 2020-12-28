@@ -58,7 +58,7 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: 'ListFooter',
+  name: 'ListCardFooter',
   props: {
     listId: {
       type: String,
