@@ -1,68 +1,66 @@
 <template>
   <div>
     <v-card
+        v-if="!showTextArea"
+        min-height="80"
+        outlined
+        @click="showTextArea = true"
+        :ripple="false"
+        class="card d-flex align-center justify-center"
+    >
+      <span class="text-subtitle-2 font-weight-regular card__title">
+        <v-icon
+            small
+            class="card__icon"
+        >
+          mdi-plus
+        </v-icon>
+          Create a new board
+      </span>
+    </v-card>
+    <v-card
+        v-else
         height="80"
         outlined
-        v-click-outside="cancelHandler"
-        :class="{ 'card': true, 'card--form': !showForm }"
+        v-click-outside="cancelAddingBoardHandler"
     >
-      <div
-          v-if="showForm"
-          class="fill-height pa-2 d-flex flex-column fill-width"
-      >
-        <div class="d-flex justify-space-between">
-          <v-form
-              class="fill-width"
-              ref="form"
-              @submit.prevent="createHandler"
-          >
-            <v-text-field
-                autofocus
-                dense
-                single-line
-                v-model="title"
-                label="Add the board title"
-                class="text-subtitle-2 ma-0"
-                @keyup.esc="cancelHandler"
-                :rules="[validationRules.required]"
+      <div class="fill-height d-flex flex-column fill-width">
+        <div class="d-flex flex-column">
+          <v-text-field
+              autofocus
+              outlined
+              dense
+              :hide-details="true"
+              autocomplete="off"
+              color="grey lighten-1"
+              placeholder="Enter the board title..."
+              class="pa-1"
+              @keyup.esc="cancelAddingBoardHandler"
+              @keyup.enter="addBoardHandler"
+              v-model="boardTitle"
+          />
+          <div class="align-self-end">
+            <v-btn
+                icon
+                x-small
+                @click.stop="cancelAddingBoardHandler"
             >
-              <template v-slot:label>
-                <span class="text-subtitle-2">Add the board title</span>
-              </template>
-            </v-text-field>
-          </v-form>
-          <v-btn
-              icon
-              x-small
-              @click="cancelHandler"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <v-btn
+                x-small
+                depressed
+                :disabled="isBoardTitleEmpty"
+                color="green darken-2"
+                class="white--text ma-1"
+                @click.stop="addBoardHandler"
+            >
+              <v-icon small>mdi-plus</v-icon>
+              Add
+            </v-btn>
+          </div>
         </div>
-        <v-btn
-            x-small
-            outlined
-            color="green"
-            :class="{ 'align-self-end': true, 'v-btn--disabled': !isTitleValid(title) }"
-            @click="createHandler"
-        >
-          <v-icon small>mdi-check</v-icon>
-          Create
-        </v-btn>
       </div>
-      <span
-          v-else
-          class="fill-height d-flex align-center justify-center text-subtitle-2 font-weight-regular card__title"
-          @click="showForm = true"
-      >
-          <v-icon
-              small
-              class="card__icon"
-          >
-            mdi-plus
-          </v-icon>
-            Create a new board
-        </span>
     </v-card>
 
     <ErrorDialog
@@ -84,46 +82,47 @@ export default {
   },
   data () {
     return {
-      title: '',
-      showForm: false,
-      showErrorDialog: false,
-      validationRules: {
-        required: value => this.isTitleValid(value) || 'Required.'
+      boardTitle: '',
+      showTextArea: false,
+      showErrorDialog: false
+    }
+  },
+  watch: {
+    showTextArea(newValue) {
+      if (newValue === false) {
+        this.boardTitle = ''
       }
     }
   },
   methods: {
-    isTitleValid (title) {
-      return title.replace(/\s/g,'').length > 0
-    },
-    async createHandler() {
-      if (this.$refs.form.validate() === false) {
+    async addBoardHandler() {
+      this.showTextArea = false;
+
+      if (this.isBoardTitleEmpty) {
         return;
       }
 
-      await this.createBoard()
-
-      this.showForm = false;
-      this.title = ''
-    },
-    async createBoard() {
       try {
-        await this.add(this.title)
+        await this.add(this.boardTitle)
       } catch (e) {
         this.showErrorDialog = true
       }
     },
-    cancelHandler() {
-      this.title = ''
-      this.showForm = false
+    cancelAddingBoardHandler() {
+      this.showTextArea = false
     },
     ...mapActions('boards', { add: 'addBoard' })
+  },
+  computed: {
+    isBoardTitleEmpty() {
+      return this.boardTitle.replace(/\s/g, '').length === 0
+    }
   }
 }
 </script>
 
 <style scoped>
-.card--form {
+.card {
   cursor: pointer;
 }
 

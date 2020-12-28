@@ -39,7 +39,7 @@
           <v-icon small>mdi-close</v-icon>
         </v-btn>
         <v-btn
-            small
+            x-small
             depressed
             @click="addItemHandler"
             :disabled="isItemTitleEmpty"

@@ -42,7 +42,7 @@
             <v-icon small>mdi-close</v-icon>
           </v-btn>
           <v-btn
-              small
+              x-small
               depressed
               :disabled="isListTitleEmpty"
               color="green darken-2"
@@ -129,8 +129,5 @@ export default {
 <style scoped>
 .button {
   width: 270px;
-}
-.v-input {
-  font-size: 1em;
 }
 </style>
