@@ -1,5 +1,5 @@
 <template>
-  <div class="list__footer">
+  <div class="item-creation">
     <v-btn
         v-if="!showTextArea"
         @click="showTextArea = true"
@@ -27,7 +27,7 @@
           @keyup.enter="addItemHandler"
           :hide-details="true"
           v-model="itemTitle"
-          class="footer__text-area"
+          class="item-creation__text-area"
       />
       <div class="align-self-end">
         <v-btn
@@ -58,7 +58,7 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: 'ListCardFooter',
+  name: 'ItemCreationButton',
   props: {
     listId: {
       type: String,
@@ -106,7 +106,7 @@ export default {
 </script>
 
 <style scoped>
-.footer__text-area {
+.item-creation__text-area {
   margin: 5px 3px 5px 3px;
 }
 </style>

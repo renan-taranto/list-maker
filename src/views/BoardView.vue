@@ -7,7 +7,7 @@
     <draggable
         :list="board.lists"
         group="lists"
-        filter=".list__footer"
+        filter=".item-creation"
         :prevent-on-filter="false"
         :animation="150"
         class="row row--dense flex-nowrap lists"

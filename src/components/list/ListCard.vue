@@ -46,20 +46,20 @@
         </v-list-item>
       </draggable>
     </v-list>
-    <ListCardFooter :list-id="listId"/>
+    <ItemCreationButton :list-id="listId"/>
   </v-card>
 </template>
 
 <script>
 import draggable from 'vuedraggable';
-import ListCardFooter from '@/components/list/ListCardFooter'
+import ItemCreationButton from '@/components/item/ItemCreationButton'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'ListCard',
   components: {
     draggable,
-    ListCardFooter
+    ItemCreationButton
   },
   props: {
     listId: {
