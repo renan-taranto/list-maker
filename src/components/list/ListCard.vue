@@ -5,9 +5,7 @@
       width="270"
       outlined
   >
-    <v-card-title class="pa-1 ml-1 list__title">
-      {{ list.title }}
-    </v-card-title>
+    <ListCardTitle :list-id="list.id"/>
     <v-list
         dense
         class="list__content"
@@ -52,6 +50,7 @@
 
 <script>
 import draggable from 'vuedraggable';
+import ListCardTitle from '@/components/list/ListCardTitle'
 import ItemCreationButton from '@/components/item/ItemCreationButton'
 import { mapActions, mapGetters } from 'vuex'
 
@@ -59,6 +58,7 @@ export default {
   name: 'ListCard',
   components: {
     draggable,
+    ListCardTitle,
     ItemCreationButton
   },
   props: {
@@ -125,11 +125,6 @@ export default {
 
 .list__content {
   padding: 1px;
-  cursor: pointer;
-}
-
-.list__title {
-  font-size: 16px;
   cursor: pointer;
 }
 </style>

@@ -37,6 +37,11 @@ const boards = {
             const list = state.boards.reduce((array, item) => array.concat(item.lists), [])
                 .find(list => list.id === listId)
             list.items.push(item)
+        },
+        UPDATE_LIST_TITLE(state, { listId, newTitle }) {
+            const list = state.boards.reduce((array, item) => array.concat(item.lists), [])
+                .find(list => list.id === listId)
+            list.title = newTitle
         }
     },
     actions: {
@@ -54,6 +59,11 @@ const boards = {
         },
         addListItem({ commit }, payload) {
             commit('ADD_LIST_ITEM', { listId: payload.listId, item: { id: uuidv4(), title: payload.itemTitle } })
+            return Promise.resolve()
+        },
+        updateListTitle({ commit }, { listId, newTitle } ) {
+            commit('UPDATE_LIST_TITLE', { listId, newTitle } )
+            return Promise.resolve()
         }
     },
     getters: {
