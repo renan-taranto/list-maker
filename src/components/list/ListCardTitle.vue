@@ -33,17 +33,14 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'ListCardTitle',
   props: {
-    listId: {
-      type: String,
+    list: {
+      type: Object,
       required: true
     }
   },
-  mounted() {
-    this.listTitle = this.listOfId(this.listId).title
-  },
   data () {
     return {
-      listTitle: '',
+      listTitle: this.list.title,
       showTextField: false
     }
   },
@@ -54,7 +51,7 @@ export default {
         return
       }
 
-      this.updateListTitle({ listId: this.listId, newTitle: newVal })
+      this.updateListTitle({ listId: this.list.id, newTitle: newVal })
     },
     dragging (newValue) {
       if (newValue === true) {
@@ -72,7 +69,6 @@ export default {
     ...mapActions('boards', ['updateListTitle'])
   },
   computed: {
-    ...mapGetters('boards', ['listOfId']),
     ...mapGetters('draggable', ['dragging'])
   }
 }
