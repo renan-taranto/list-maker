@@ -5,14 +5,13 @@
       width="270"
       outlined
   >
-    <ListCardTitle :list="list"/>
+    <ListCardHeader :list="list"/>
     <ListCardContent :list="list"/>
     <ItemCreationButton :list-id="listId"/>
   </v-card>
 </template>
-
 <script>
-import ListCardTitle from '@/components/list/ListCardTitle'
+import ListCardHeader from '@/components/list/ListCardHeader'
 import ListCardContent from '@/components/list/ListCardContent'
 import ItemCreationButton from '@/components/item/ItemCreationButton'
 import { mapGetters } from 'vuex'
@@ -20,7 +19,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'ListCard',
   components: {
-    ListCardTitle,
+    ListCardHeader,
     ListCardContent,
     ItemCreationButton
   },

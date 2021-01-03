@@ -14,13 +14,14 @@ const boards = {
                     { title: "Testing", items: [{id: 6, title: 'Task K'}, {id: 7, title: 'Task L'}, {id: 8, title: 'Task M'}], id: '2' },
                     { title: "Waiting Deploy", items: [{id: 9, title: 'Task N'}, {id: 10, title: 'Task O'}, {id: 11, title: 'Task P'}], id: '3' },
                     { title: "Done", items: [{id: 12, title: 'Task H'}, {id: 13, title: 'Task I'}, {id: 14, title: 'Task J'}], id: '4' }
-                ]
+                ],
+                archivedLists: []
             },
-            { id: '2', title: 'Sprint 1', open: true, lists: [] },
-            { id: '3', title: 'Sprint 2', open: true, lists: [] },
-            { id: '4', title: 'Sprint 3', open: true, lists: [] },
-            { id: '5', title: 'Sprint 4', open: true, lists: [] },
-            { id: '6', title: 'Sprint 5', open: false, lists: [] }
+            { id: '2', title: 'Sprint 1', open: true, lists: [], archivedLists: [] },
+            { id: '3', title: 'Sprint 2', open: true, lists: [], archivedLists: [] },
+            { id: '4', title: 'Sprint 3', open: true, lists: [], archivedLists: [] },
+            { id: '5', title: 'Sprint 4', open: true, lists: [], archivedLists: [] },
+            { id: '6', title: 'Sprint 5', open: false, lists: [], archivedLists: [] }
         ]
     }),
     mutations: {
@@ -42,6 +43,13 @@ const boards = {
             const list = state.boards.reduce((array, item) => array.concat(item.lists), [])
                 .find(list => list.id === listId)
             list.title = newTitle
+        },
+        ARCHIVE_LIST(state, listId) {
+            const board = state.boards.find(b => b.lists.find(l => l.id === listId))
+            const listIndex = board.lists.findIndex(list => list.id === listId)
+            const list = board.lists[listIndex]
+            board.lists.splice(listIndex, 1)
+            board.archivedLists.push(list)
         }
     },
     actions: {
@@ -64,6 +72,9 @@ const boards = {
         updateListTitle({ commit }, { listId, newTitle } ) {
             commit('UPDATE_LIST_TITLE', { listId, newTitle } )
             return Promise.resolve()
+        },
+        archiveList({ commit }, listId) {
+            commit('ARCHIVE_LIST', listId)
         }
     },
     getters: {

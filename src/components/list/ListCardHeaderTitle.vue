@@ -1,7 +1,7 @@
 <template>
   <v-card-title
       @click="showTextField = true"
-      :class="[ showTextField ? 'pa-0' : 'pa-1', 'ml-1', 'mr-1', 'list__header']"
+      :class="[ showTextField ? 'pa-0' : 'pa-1', 'ml-1', 'mr-1', 'list__header', 'fill-width']"
   >
     <span
         class="list__title"
@@ -31,7 +31,7 @@
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
-  name: 'ListCardTitle',
+  name: 'ListCardHeaderTitle',
   props: {
     list: {
       type: Object,
