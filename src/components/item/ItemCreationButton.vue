@@ -1,8 +1,8 @@
 <template>
   <div class="item-creation">
     <v-btn
-        v-if="!showTextArea"
-        @click="showTextArea = true"
+        v-if="!isTextAreaVisible"
+        @click="isTextAreaVisible = true"
         text
         small
         block
@@ -67,12 +67,12 @@ export default {
   },
   data() {
     return {
-      showTextArea: false,
+      isTextAreaVisible: false,
       itemTitle: ''
     }
   },
   watch: {
-    showTextArea (newValue) {
+    isTextAreaVisible (newValue) {
       if (newValue === false) {
         this.itemTitle = ''
       }
@@ -89,10 +89,10 @@ export default {
         this.addListItem({ listId: this.listId, itemTitle: this.itemTitle })
       }
 
-      this.showTextArea = false
+      this.isTextAreaVisible = false
     },
     cancelAddingItemHandler() {
-      this.showTextArea = false
+      this.isTextAreaVisible = false
     },
     ...mapActions('boards', ['addListItem'])
   },

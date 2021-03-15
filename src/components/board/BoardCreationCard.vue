@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-card
-        v-if="!showTextArea"
+        v-if="!isTextAreaVisible"
         min-height="80"
         outlined
-        @click="showTextArea = true"
+        @click="isTextAreaVisible = true"
         :ripple="false"
         class="card d-flex align-center justify-center"
     >
@@ -64,9 +64,9 @@
     </v-card>
 
     <ErrorDialog
-        :show="showErrorDialog"
+        :show="isErrorDialogVisible"
         :message="'An error has occurred while creating the board.'"
-        @dialogClose="showErrorDialog = false"
+        @dialogClose="isErrorDialogVisible = false"
     />
   </div>
 </template>
@@ -83,12 +83,12 @@ export default {
   data () {
     return {
       boardTitle: '',
-      showTextArea: false,
-      showErrorDialog: false
+      isTextAreaVisible: false,
+      isErrorDialogVisible: false
     }
   },
   watch: {
-    showTextArea(newValue) {
+    isTextAreaVisible(newValue) {
       if (newValue === false) {
         this.boardTitle = ''
       }
@@ -96,7 +96,7 @@ export default {
   },
   methods: {
     async addBoardHandler() {
-      this.showTextArea = false;
+      this.isTextAreaVisible = false;
 
       if (this.isBoardTitleEmpty) {
         return;
@@ -105,11 +105,11 @@ export default {
       try {
         await this.add(this.boardTitle)
       } catch (e) {
-        this.showErrorDialog = true
+        this.isErrorDialogVisible = true
       }
     },
     cancelAddingBoardHandler() {
-      this.showTextArea = false
+      this.isTextAreaVisible = false
     },
     ...mapActions('boards', { add: 'addBoard' })
   },

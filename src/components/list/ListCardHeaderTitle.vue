@@ -1,11 +1,11 @@
 <template>
   <v-card-title
-      @click="showTextField = true"
-      :class="[ showTextField ? 'pa-0' : 'pa-1', 'ml-1', 'mr-1', 'list__header', 'fill-width']"
+      @click="isTextFieldVisible = true"
+      :class="[ isTextFieldVisible ? 'pa-0' : 'pa-1', 'ml-1', 'mr-1', 'list__header', 'fill-width']"
   >
     <span
         class="list__title"
-        v-if="!showTextField"
+        v-if="!isTextFieldVisible"
     >
       {{ listTitle }}
     </span>
@@ -41,7 +41,7 @@ export default {
   data () {
     return {
       listTitle: this.list.title,
-      showTextField: false
+      isTextFieldVisible: false
     }
   },
   watch: {
@@ -64,7 +64,7 @@ export default {
       return string.replace(/\s/g, '').length === 0
     },
     hideTextField () {
-      this.showTextField = false
+      this.isTextFieldVisible = false
     },
     ...mapActions('boards', ['updateListTitle'])
   },

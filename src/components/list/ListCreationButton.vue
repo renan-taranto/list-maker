@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-btn
-        v-if="!showTextArea"
-        @click="showTextArea = true"
+        v-if="!isTextAreaVisible"
+        @click="isTextAreaVisible = true"
         class="button"
         text
         small
@@ -57,9 +57,9 @@
     </v-card>
 
     <ErrorDialog
-        :show="showErrorDialog"
+        :show="isErrorDialogVisible"
         :message="'An error has occurred while creating the list.'"
-        @dialogClose="showErrorDialog = false"
+        @dialogClose="isErrorDialogVisible = false"
     />
   </div>
 </template>
@@ -81,13 +81,13 @@ export default {
   },
   data () {
     return {
-      showTextArea: false,
-      showErrorDialog: false,
+      isTextAreaVisible: false,
+      isErrorDialogVisible: false,
       listTitle: ''
     }
   },
   watch: {
-    showTextArea (newValue) {
+    isTextAreaVisible (newValue) {
       if (newValue === false) {
         this.listTitle = ''
       }
@@ -100,7 +100,7 @@ export default {
   },
   methods: {
     async addListHandler () {
-      this.showTextArea = false
+      this.isTextAreaVisible = false
 
       if (this.isListTitleEmpty) {
         return;
@@ -109,11 +109,11 @@ export default {
       try {
         await this.addList({ boardId: this.boardId, listTitle: this.listTitle })
       } catch (e) {
-        this.showErrorDialog = true
+        this.isErrorDialogVisible = true
       }
     },
     cancelAddingListHandler () {
-      this.showTextArea = false
+      this.isTextAreaVisible = false
     },
     ...mapActions('boards', ['addList'])
   },
