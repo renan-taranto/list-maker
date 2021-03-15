@@ -59,15 +59,17 @@ export default {
   },
   mounted() {
     this.board = this.boardOfId(this.boardId)
-
     if (typeof this.board !== "object") {
       this.$router.push({ name: 'NotFound' })
     }
+
+    this.selectBoard(this.boardId)
   },
   computed: {
     ...mapGetters('boards', ['boardOfId'])
   },
   methods: {
+    ...mapActions('boards', ['selectBoard']),
     ...mapActions('draggable', ['dragStarted', 'dragStopped'])
   }
 }
