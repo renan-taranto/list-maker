@@ -1,11 +1,12 @@
 <template>
   <v-container fluid>
-    <div class="text-h6 pa-2">Boards</div>
-    <v-row class="justify-end row__btn-close">
+    <v-row :justify="'space-between'" :align="'center'">
+      <div class="text-h6 ml-5">Boards</div>
       <v-btn
           v-if="closedBoards.length > 0"
           x-small
           text
+          class="mr-5"
       >
         view closed boards
       </v-btn>
@@ -24,7 +25,6 @@
           sm="4"
           md="3"
           lg="2"
-          class="draggable"
       >
         <BoardCard :board="board"></BoardCard>
       </v-col>

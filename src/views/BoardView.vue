@@ -3,14 +3,16 @@
       v-if="board"
       fluid
   >
-    <div class="text-h6 pa-2">{{ board.title }}</div>
+    <v-row :justify="'space-between'" :align="'center'">
+      <div class="text-h6 ml-5">{{ board.title }}</div>
+    </v-row>
     <draggable
         :list="board.lists"
         group="lists"
         filter=".item-creation"
         :prevent-on-filter="false"
         :animation="150"
-        class="row row--dense flex-nowrap lists"
+        class="row row--dense flex-nowrap pt-2"
         ghost-class="lists--ghost"
         chosen-class="lists--chosen"
         force-fallback="true"
@@ -76,10 +78,6 @@ export default {
 </script>
 
 <style scoped>
-.lists {
-  padding-top: 32px;
-}
-
 .lists--ghost {
   visibility: hidden;
 }
