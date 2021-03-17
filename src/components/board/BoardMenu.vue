@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import RestoreListCard from '@/components/board/RestoreListCard'
 
 export default {
@@ -85,17 +86,23 @@ export default {
     return {
       isDrawerVisible: false,
       items: [
-        { title: 'Restore List', icon: 'mdi-restore-alert', onClick: 'showRestoreListCard' }
+        { title: 'Restore List', icon: 'mdi-restore-alert', onClick: 'showRestoreListCard' },
+        { title: 'Close Board', icon: 'mdi-close', onClick: 'closeTheBoard' }
       ],
       isRestoreListCardVisible: false
     }
   },
   methods: {
+    ...mapActions('boards', ['closeBoard']),
     handleClick(functionName) {
       this[functionName]()
     },
     showRestoreListCard () {
       this.isRestoreListCardVisible = true
+    },
+    closeTheBoard() {
+      this.closeBoard(this.boardId)
+      this.$router.push({ name: 'BoardsView' })
     }
   },
   watch: {

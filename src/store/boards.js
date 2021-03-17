@@ -71,7 +71,7 @@ const boards = {
     },
     actions: {
         addBoard ({ commit }, title) {
-            commit('ADD_BOARD', { id: uuidv4(), title: title, open: true, lists: [] })
+            commit('ADD_BOARD', { id: uuidv4(), title: title, open: true, lists: [], archivedLists: [] })
             return Promise.resolve()
         },
         closeBoard ({ commit }, id) {
