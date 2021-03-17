@@ -45,6 +45,12 @@ const boards = {
             board.lists.splice(listIndex, 1)
             board.archivedLists.push(list)
         },
+        RESTORE_LIST(state, listId) {
+            const board = state.boards.find(b => b.archivedLists.find(l => l.id === listId))
+            const listIndex = board.archivedLists.findIndex(l => l.id === listId)
+            const list = board.archivedLists.splice(listIndex, 1)[0]
+            board.lists.push(list)
+        },
         MOVE_LIST(state, { listId, targetBoardId, targetIndex }) {
             const currentListBoard = state.boards.find(b => b.lists.find(l => l.id === listId))
             const currentListIndex = currentListBoard.lists.findIndex(list => list.id === listId)
@@ -82,6 +88,9 @@ const boards = {
         archiveList({ commit }, listId) {
             commit('ARCHIVE_LIST', listId)
         },
+        restoreList({ commit }, listId) {
+            commit('RESTORE_LIST', listId)
+        },
         moveList({ commit }, { listId, targetBoardId, targetIndex } ) {
             commit('MOVE_LIST', { listId, targetBoardId, targetIndex })
         },
@@ -110,6 +119,9 @@ const boards = {
         },
         boardListsCount: (state, getters) => (id) => {
             return getters.boardOfId(id).lists.length
+        },
+        archivedBoardLists: (state, getters) => (boardId) => {
+            return getters.boardOfId(boardId).archivedLists
         },
         selectedBoard: (state, getters) => {
             return getters.boardOfId(state.selectedBoardId)

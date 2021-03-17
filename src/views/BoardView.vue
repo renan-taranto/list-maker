@@ -5,6 +5,7 @@
   >
     <v-row :justify="'space-between'" :align="'center'">
       <div class="text-h6 ml-5">{{ board.title }}</div>
+      <BoardMenu class="mr-5" :board-id="boardId"/>
     </v-row>
     <draggable
         :list="board.lists"
@@ -37,6 +38,7 @@
 
 <script>
 import draggable from 'vuedraggable'
+import BoardMenu from '@/components/board/BoardMenu'
 import ListCard from '@/components/list/ListCard'
 import ListCreationButton from '@/components/list/ListCreationButton'
 import { mapActions, mapGetters } from 'vuex'
@@ -45,6 +47,7 @@ export default {
   name: "BoardView",
   components: {
     draggable,
+    BoardMenu,
     ListCard,
     ListCreationButton
   },
