@@ -4,6 +4,7 @@
         v-model="drawer"
         absolute
         temporary
+        class="navigation-menu"
     >
       <v-list
           nav
@@ -140,6 +141,10 @@ export default {
 </script>
 
 <style scoped>
+.navigation-menu {
+  will-change: initial; /* Fix for chrome blurry fonts: https://github.com/vuetifyjs/vuetify/issues/12890 */
+}
+
 .header__btn:before {
   display: none; /* Removes v-btn's box shadow on hover */
 }
