@@ -1,3 +1,9 @@
 .fill-width {
     width: 100%;
 }
+
+.navigation-drawer-menu {
+    border: thin solid #0000001f;
+    border-radius: 4px;
+    will-change: initial; /* Fix for chrome blurry fonts: https://github.com/vuetifyjs/vuetify/issues/12890 */
+}

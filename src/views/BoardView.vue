@@ -3,17 +3,36 @@
       v-if="board"
       fluid
   >
-    <v-row :justify="'space-between'" :align="'center'">
-      <div class="text-h6 ml-5">{{ board.title }}</div>
-      <BoardMenu class="mr-5" :board-id="boardId"/>
-    </v-row>
+    <PageHeader>
+      <v-row :justify="'space-between'" :align="'center'">
+        <div class="text-h6 ml-5">{{ board.title }}</div>
+        <v-btn
+            class="white--text mr-10"
+            text
+            small
+            outlined
+            color="grey darken-1"
+            @click="isMenuVisible = true"
+        >
+          <v-icon left>mdi-menu</v-icon>
+          Menu
+        </v-btn>
+      </v-row>
+    </PageHeader>
+
+    <BoardMenu
+        :is-menu-visible="isMenuVisible"
+        :board-id="boardId"
+        @menu-closed="isMenuVisible = false"
+    />
+
     <draggable
         :list="board.lists"
         group="lists"
         filter=".item-creation"
         :prevent-on-filter="false"
         :animation="150"
-        class="row row--dense flex-nowrap pt-2"
+        class="row row--dense flex-nowrap"
         ghost-class="lists--ghost"
         chosen-class="lists--chosen"
         force-fallback="true"
@@ -38,6 +57,7 @@
 
 <script>
 import draggable from 'vuedraggable'
+import PageHeader from '@/components/layout/PageHeader'
 import BoardMenu from '@/components/board/BoardMenu'
 import ListCard from '@/components/list/ListCard'
 import ListCreationButton from '@/components/list/ListCreationButton'
@@ -47,6 +67,7 @@ export default {
   name: "BoardView",
   components: {
     draggable,
+    PageHeader,
     BoardMenu,
     ListCard,
     ListCreationButton
@@ -59,7 +80,8 @@ export default {
   },
   data () {
     return {
-      board: null
+      board: null,
+      isMenuVisible: false
     }
   },
   mounted() {
