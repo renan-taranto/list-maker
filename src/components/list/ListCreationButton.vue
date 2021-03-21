@@ -37,12 +37,13 @@
               depressed
               icon
               small
+              class="mr-2"
               @click="cancelAddingListHandler"
           >
-            <v-icon small>mdi-close</v-icon>
+            <v-icon>mdi-close</v-icon>
           </v-btn>
           <v-btn
-              x-small
+              small
               depressed
               :disabled="isListTitleEmpty"
               color="green darken-2"

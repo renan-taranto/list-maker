@@ -34,12 +34,13 @@
             depressed
             icon
             small
+            class="mr-2"
             @click="cancelAddingItemHandler"
         >
-          <v-icon small>mdi-close</v-icon>
+          <v-icon>mdi-close</v-icon>
         </v-btn>
         <v-btn
-            x-small
+            small
             depressed
             @click="addItemHandler"
             :disabled="isItemTitleEmpty"

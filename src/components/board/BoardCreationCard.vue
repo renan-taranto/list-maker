@@ -39,20 +39,21 @@
               @keyup.enter="addBoardHandler"
               v-model="boardTitle"
           />
-          <div class="align-self-end">
+          <div class="align-self-end mr-1">
             <v-btn
                 icon
-                x-small
+                small
+                class="mr-2"
                 @click.stop="cancelAddingBoardHandler"
             >
               <v-icon>mdi-close</v-icon>
             </v-btn>
             <v-btn
-                x-small
+                small
                 depressed
                 :disabled="isBoardTitleEmpty"
                 color="green darken-2"
-                class="white--text ma-1"
+                class="white--text"
                 @click.stop="addBoardHandler"
             >
               <v-icon small>mdi-plus</v-icon>
