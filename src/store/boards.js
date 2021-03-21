@@ -32,6 +32,9 @@ const boards = {
         CLOSE_BOARD (state, id) {
             state.boards.find(b => b.id === id).open = false
         },
+        REOPEN_BOARD (state, id) {
+            state.boards.find(b => b.id === id).open = true
+        },
         SELECT_BOARD (state, boardId) {
             state.selectedBoardId = boardId
         },
@@ -77,6 +80,9 @@ const boards = {
         closeBoard ({ commit }, id) {
             commit('CLOSE_BOARD', id)
             return Promise.resolve()
+        },
+        reopenBoard ({ commit }, id) {
+            commit('REOPEN_BOARD', id)
         },
         selectBoard({ commit }, boardId) {
             commit('SELECT_BOARD', boardId)

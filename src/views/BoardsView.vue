@@ -1,16 +1,27 @@
 <template>
   <v-container fluid>
-    <v-row :justify="'space-between'" :align="'center'">
-      <div class="text-h6 ml-5">Boards</div>
-      <v-btn
-          v-if="closedBoards.length > 0"
-          x-small
-          text
-          class="mr-5"
-      >
-        view closed boards
-      </v-btn>
-    </v-row>
+    <PageHeader>
+      <v-row :justify="'space-between'" :align="'center'">
+        <div class="text-h6 ml-5">Boards</div>
+        <v-btn
+            class="white--text mr-10"
+            text
+            small
+            outlined
+            color="grey darken-1"
+            @click="isMenuVisible = true"
+        >
+          <v-icon left>mdi-menu</v-icon>
+          Menu
+        </v-btn>
+      </v-row>
+    </PageHeader>
+
+    <BoardsMenu
+        :is-menu-visible="isMenuVisible"
+        @menu-closed="isMenuVisible = false"
+    />
+
     <div
         v-if="openBoards.length === 0"
         class="text-caption pa-2"
@@ -44,22 +55,25 @@
 <script>
 import BoardCreationCard from '@/components/board/BoardCreationCard'
 import BoardCard from '@/components/board/BoardCard'
+import BoardsMenu from '@/components/board/BoardsMenu'
+import PageHeader from '@/components/layout/PageHeader'
 import { mapGetters } from 'vuex'
 
 export default {
   name: "BoardsView",
   components: {
     BoardCreationCard,
-    BoardCard
+    BoardCard,
+    BoardsMenu,
+    PageHeader
+  },
+  data() {
+    return {
+      isMenuVisible: false
+    }
   },
   computed: {
-    ...mapGetters('boards', ['openBoards', 'closedBoards'])
+    ...mapGetters('boards', ['openBoards'])
   }
 }
 </script>
-
-<style scoped>
-.row__btn-close {
-  min-height: 20px;
-}
-</style>

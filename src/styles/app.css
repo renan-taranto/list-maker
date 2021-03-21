@@ -5,5 +5,6 @@
 .navigation-drawer-menu {
     border: thin solid #0000001f;
     border-radius: 4px;
+    box-shadow: none !important;
     will-change: initial; /* Fix for chrome blurry fonts: https://github.com/vuetifyjs/vuetify/issues/12890 */
 }
