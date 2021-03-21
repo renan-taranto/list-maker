@@ -49,7 +49,7 @@
         <ListCard :list-id="list.id"></ListCard>
       </v-col>
       <v-col class="pa-0 ml-3">
-        <ListCreationButton :board-id="boardId"/>
+        <ListCreationButtons :board-id="boardId"/>
       </v-col>
     </draggable>
   </v-container>
@@ -60,7 +60,7 @@ import draggable from 'vuedraggable'
 import PageHeader from '@/components/layout/PageHeader'
 import BoardMenu from '@/components/board/BoardMenu'
 import ListCard from '@/components/list/ListCard'
-import ListCreationButton from '@/components/list/ListCreationButton'
+import ListCreationButtons from '@/components/list/ListCreationButtons'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
@@ -70,7 +70,7 @@ export default {
     PageHeader,
     BoardMenu,
     ListCard,
-    ListCreationButton
+    ListCreationButtons
   },
   props: {
     boardId: {
