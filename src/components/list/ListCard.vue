@@ -7,13 +7,13 @@
   >
     <ListCardHeader :list="list"/>
     <ListCardContent :list="list"/>
-    <ItemCreationButton :list-id="listId"/>
+    <ItemCreationButtons :list-id="listId"/>
   </v-card>
 </template>
 <script>
 import ListCardHeader from '@/components/list/ListCardHeader'
 import ListCardContent from '@/components/list/ListCardContent'
-import ItemCreationButton from '@/components/item/ItemCreationButton'
+import ItemCreationButtons from '@/components/item/ItemCreationButtons'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -21,7 +21,7 @@ export default {
   components: {
     ListCardHeader,
     ListCardContent,
-    ItemCreationButton
+    ItemCreationButtons
   },
   props: {
     listId: {

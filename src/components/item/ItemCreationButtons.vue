@@ -59,7 +59,7 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: 'ItemCreationButton',
+  name: 'ItemCreationButtons',
   props: {
     listId: {
       type: String,
