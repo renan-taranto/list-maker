@@ -15,7 +15,7 @@
           color="green"
           @click="restoreList(list.id)"
       >
-        <v-icon>mdi-cached</v-icon>
+        <v-icon>mdi-restore</v-icon>
       </v-btn>
     </v-card>
 
@@ -24,7 +24,7 @@
         dense
         text
         type="info"
-        color="blue-grey"
+        color="grey darken-2"
         class="text-caption"
     >
       There are no archived lists in this board

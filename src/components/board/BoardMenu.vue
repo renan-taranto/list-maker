@@ -1,6 +1,7 @@
 <template>
   <v-navigation-drawer
       v-model="isDrawerVisible"
+      temporary
       fixed
       right
       hide-overlay
@@ -8,7 +9,7 @@
   >
     <v-list-item>
       <v-list-item-content>
-        <v-list-item-title class="text-center">Menu</v-list-item-title>
+        <v-list-item-title class="text-center primary--text">{{ title }}</v-list-item-title>
         <v-btn
             v-if="isRestoreListCardVisible"
             icon
@@ -40,7 +41,7 @@
             @click="handleClick(item.onClick)"
         >
           <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-icon color="primary">{{ item.icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
@@ -77,7 +78,7 @@ export default {
   data() {
     return {
       items: [
-        { title: 'Restore List', icon: 'mdi-restore-alert', onClick: 'showRestoreListCard' },
+        { title: 'Restore List', icon: 'mdi-restore', onClick: 'showRestoreListCard' },
         { title: 'Close Board', icon: 'mdi-close', onClick: 'closeTheBoard' }
       ],
       isRestoreListCardVisible: false
@@ -94,6 +95,9 @@ export default {
           this.isRestoreListCardVisible = false
         }
       }
+    },
+    title() {
+      return this.isRestoreListCardVisible ? 'Restore List' : 'Menu'
     }
   },
   methods: {
