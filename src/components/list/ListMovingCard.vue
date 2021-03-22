@@ -41,7 +41,7 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: 'MoveListCard',
+  name: 'ListMovingCard',
   props: {
     listId: {
       type: String,

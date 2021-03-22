@@ -25,8 +25,8 @@
             icon
             absolute
             class="menu__back-btn"
-            v-if="isMoveListCardVisible"
-            @click="hideMoveListCard"
+            v-if="isListMovingCardVisible"
+            @click="hideListMovingCard"
         >
           <v-icon small>mdi-arrow-left</v-icon>
         </v-btn>
@@ -46,16 +46,16 @@
 
       <v-list-item-group
           class="text-subtitle-2"
-          v-if="!isMoveListCardVisible"
+          v-if="!isListMovingCardVisible"
       >
-        <v-list-item @click="showMoveListCard"><span class="menu__item">Move</span></v-list-item>
+        <v-list-item @click="showListMovingCard"><span class="menu__item">Move</span></v-list-item>
         <v-list-item @click="archiveList(listId)"><span class="menu__item">Archive</span></v-list-item>
       </v-list-item-group>
     </v-list>
 
-    <MoveListCard
+    <ListMovingCard
         class="pt-4"
-        v-if="isMoveListCardVisible"
+        v-if="isListMovingCardVisible"
         :list-id="listId"
         @list-moved="closeMenu"
     />
@@ -64,11 +64,11 @@
 
 <script>
 import {  mapActions } from 'vuex'
-import MoveListCard from '@/components/list/MoveListCard'
+import ListMovingCard from '@/components/list/ListMovingCard'
 
 export default {
   name: 'ListCardHeaderMenu',
-  components: { MoveListCard },
+  components: { ListMovingCard },
   props: {
     listId: {
       type: String,
@@ -78,21 +78,21 @@ export default {
   data () {
     return {
       isVisible: false,
-      isMoveListCardVisible: false
+      isListMovingCardVisible: false
     }
   },
   computed: {
     title () {
-      return this.isMoveListCardVisible === false ? 'List Menu' : 'Move List'
+      return this.isListMovingCardVisible === false ? 'List Menu' : 'Move List'
     }
   },
   methods: {
     ...mapActions('boards', ['archiveList']),
-    showMoveListCard () {
-      this.isMoveListCardVisible = true
+    showListMovingCard () {
+      this.isListMovingCardVisible = true
     },
-    hideMoveListCard () {
-      this.isMoveListCardVisible = false
+    hideListMovingCard () {
+      this.isListMovingCardVisible = false
     },
     closeMenu () {
       this.isVisible = false
@@ -101,7 +101,7 @@ export default {
   watch: {
     isVisible(val) {
       if (val === false) {
-        this.hideMoveListCard()
+        this.hideListMovingCard()
       }
     }
   }
