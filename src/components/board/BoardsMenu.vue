@@ -11,11 +11,11 @@
       <v-list-item-content>
         <v-list-item-title class="text-center primary--text">{{ title }}</v-list-item-title>
         <v-btn
-            v-if="isReopenBoardCardVisible"
+            v-if="isBoardReopeningCardVisible"
             icon
             absolute
             left
-            @click="isReopenBoardCardVisible = false"
+            @click="isBoardReopeningCardVisible = false"
         >
           <v-icon small>mdi-arrow-left</v-icon>
         </v-btn>
@@ -32,7 +32,7 @@
 
     <v-divider></v-divider>
 
-    <div v-if="!isReopenBoardCardVisible">
+    <div v-if="!isBoardReopeningCardVisible">
       <v-list dense>
         <v-list-item
             v-for="item in items"
@@ -52,17 +52,17 @@
     </div>
 
     <v-slide-x-reverse-transition hide-on-leave>
-      <ReopenBoardCard v-if="isReopenBoardCardVisible"/>
+      <BoardReopeningCard v-if="isBoardReopeningCardVisible"/>
     </v-slide-x-reverse-transition>
   </v-navigation-drawer>
 </template>
 
 <script>
-import ReopenBoardCard from '@/components/board/ReopenBoardCard'
+import BoardReopeningCard from '@/components/board/BoardReopeningCard'
 
 export default {
   name: 'BoardsMenu',
-  components: { ReopenBoardCard },
+  components: { BoardReopeningCard },
   props: {
     isMenuVisible: {
       type: Boolean,
@@ -73,9 +73,9 @@ export default {
   data() {
     return {
       items: [
-        { title: 'Reopen Board', icon: 'mdi-restore', onClick: 'showReopenBoardCard' }
+        { title: 'Reopen Board', icon: 'mdi-restore', onClick: 'showBoardReopeningCard' }
       ],
-      isReopenBoardCardVisible: false
+      isBoardReopeningCardVisible: false
     }
   },
   computed: {
@@ -86,20 +86,20 @@ export default {
       set(val) {
         if (val === false) {
           this.$emit('menu-closed')
-          this.isReopenBoardCardVisible = false
+          this.isBoardReopeningCardVisible = false
         }
       }
     },
     title() {
-      return this.isReopenBoardCardVisible ? 'Reopen Board' : 'Menu'
+      return this.isBoardReopeningCardVisible ? 'Reopen Board' : 'Menu'
     }
   },
   methods: {
     handleClick(functionName) {
       this[functionName]()
     },
-    showReopenBoardCard() {
-      this.isReopenBoardCardVisible = true
+    showBoardReopeningCard() {
+      this.isBoardReopeningCardVisible = true
     }
   }
 }

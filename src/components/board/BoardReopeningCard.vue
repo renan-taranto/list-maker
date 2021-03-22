@@ -36,7 +36,7 @@
 
 import { mapGetters, mapActions } from 'vuex'
 export default {
-  name: 'ReopenBoardCard',
+  name: 'BoardReopeningCard',
   computed: {
     ...mapGetters('boards', ['closedBoards'])
   },
