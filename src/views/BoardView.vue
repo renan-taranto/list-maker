@@ -4,8 +4,8 @@
       fluid
   >
     <PageHeader>
-      <v-row :justify="'space-between'" :align="'center'">
-        <div class="text-h6 ml-5">{{ board.title }}</div>
+      <v-row :justify="'space-between'" :align="'start'">
+        <BoardTitle :board="board"/>
         <v-btn
             class="white--text mr-10"
             text
@@ -59,6 +59,7 @@
 import draggable from 'vuedraggable'
 import PageHeader from '@/components/layout/PageHeader'
 import BoardMenu from '@/components/board/BoardMenu'
+import BoardTitle from '@/components/board/BoardTitle'
 import ListCard from '@/components/list/ListCard'
 import ListCreationButtons from '@/components/list/ListCreationButtons'
 import { mapActions, mapGetters } from 'vuex'
@@ -69,6 +70,7 @@ export default {
     draggable,
     PageHeader,
     BoardMenu,
+    BoardTitle,
     ListCard,
     ListCreationButtons
   },

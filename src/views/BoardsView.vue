@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <PageHeader>
-      <v-row :justify="'space-between'" :align="'center'">
+      <v-row :justify="'space-between'" :align="'start'">
         <div class="text-h6 ml-5">Boards</div>
         <v-btn
             class="white--text mr-10"

@@ -38,6 +38,9 @@ const boards = {
         SELECT_BOARD (state, boardId) {
             state.selectedBoardId = boardId
         },
+        UPDATE_BOARD_TITLE (state, { boardId, newTitle }) {
+            state.boards.find(b => b.id === boardId).title = newTitle
+        },
         ADD_LIST(state, { boardId, list }) {
             state.boards.find(b => b.id === boardId).lists.push(list)
         },
@@ -86,6 +89,9 @@ const boards = {
         },
         selectBoard({ commit }, boardId) {
             commit('SELECT_BOARD', boardId)
+        },
+        updateBoardTitle({ commit }, { boardId, newTitle }) {
+            commit('UPDATE_BOARD_TITLE', { boardId, newTitle })
         },
         addList ({ commit }, { boardId, listTitle }) {
             commit('ADD_LIST', { boardId: boardId, list: { id: uuidv4(), title: listTitle, items: [] } })
