@@ -36,7 +36,7 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: 'RestoreListCard',
+  name: 'ListRestoringCard',
   props: {
     boardId: {
       type: String,

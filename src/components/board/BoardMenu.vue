@@ -11,11 +11,11 @@
       <v-list-item-content>
         <v-list-item-title class="text-center primary--text">{{ title }}</v-list-item-title>
         <v-btn
-            v-if="isRestoreListCardVisible"
+            v-if="isListRestoringCardVisible"
             icon
             absolute
             left
-            @click="isRestoreListCardVisible = false"
+            @click="isListRestoringCardVisible = false"
         >
           <v-icon small>mdi-arrow-left</v-icon>
         </v-btn>
@@ -32,7 +32,7 @@
 
     <v-divider></v-divider>
 
-    <div v-if="!isRestoreListCardVisible">
+    <div v-if="!isListRestoringCardVisible">
       <v-list dense>
         <v-list-item
             v-for="item in items"
@@ -52,18 +52,18 @@
     </div>
 
     <v-slide-x-reverse-transition hide-on-leave>
-      <RestoreListCard v-if="isRestoreListCardVisible" :board-id="boardId"/>
+      <ListRestoringCard v-if="isListRestoringCardVisible" :board-id="boardId"/>
     </v-slide-x-reverse-transition>
   </v-navigation-drawer>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
-import RestoreListCard from '@/components/board/RestoreListCard'
+import ListRestoringCard from '@/components/board/ListRestoringCard'
 
 export default {
   name: 'BoardMenu',
-  components: { RestoreListCard },
+  components: { ListRestoringCard },
   props: {
     isMenuVisible: {
       type: Boolean,
@@ -78,10 +78,10 @@ export default {
   data() {
     return {
       items: [
-        { title: 'Restore List', icon: 'mdi-restore', onClick: 'showRestoreListCard' },
+        { title: 'Restore List', icon: 'mdi-restore', onClick: 'showListRestoringCard' },
         { title: 'Close Board', icon: 'mdi-close', onClick: 'closeTheBoard' }
       ],
-      isRestoreListCardVisible: false
+      isListRestoringCardVisible: false
     }
   },
   computed: {
@@ -92,12 +92,12 @@ export default {
       set(val) {
         if (val === false) {
           this.$emit('menu-closed')
-          this.isRestoreListCardVisible = false
+          this.isListRestoringCardVisible = false
         }
       }
     },
     title() {
-      return this.isRestoreListCardVisible ? 'Restore List' : 'Menu'
+      return this.isListRestoringCardVisible ? 'Restore List' : 'Menu'
     }
   },
   methods: {
@@ -105,8 +105,8 @@ export default {
     handleClick(functionName) {
       this[functionName]()
     },
-    showRestoreListCard () {
-      this.isRestoreListCardVisible = true
+    showListRestoringCard () {
+      this.isListRestoringCardVisible = true
     },
     closeTheBoard() {
       this.closeBoard(this.boardId)
