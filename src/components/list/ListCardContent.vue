@@ -24,6 +24,7 @@
       >
         <v-hover v-slot="{ hover }">
           <div
+              @click="selectItem(item.id)"
               :class="[
                   'item',
                   'fill-width',
@@ -58,7 +59,8 @@ export default {
     ...mapGetters('draggable', ['dragging'])
   },
   methods: {
-    ...mapActions('draggable', ['dragStarted', 'dragStopped'])
+    ...mapActions('draggable', ['dragStarted', 'dragStopped']),
+    ...mapActions('boards', ['selectItem'])
   }
 }
 </script>

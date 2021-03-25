@@ -52,6 +52,13 @@
         <ListCreationButtons :board-id="boardId"/>
       </v-col>
     </draggable>
+
+    <ItemDialog
+        v-if="selectedItem !== null"
+        :item="selectedItem"
+        :is-visible="selectedItem !== null"
+        @dialog-closed="selectItem(null)"
+    />
   </v-container>
 </template>
 
@@ -62,6 +69,7 @@ import BoardMenu from '@/components/board/BoardMenu'
 import BoardTitle from '@/components/board/BoardTitle'
 import ListCard from '@/components/list/ListCard'
 import ListCreationButtons from '@/components/list/ListCreationButtons'
+import ItemDialog from '@/components/item/ItemDialog'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
@@ -72,7 +80,8 @@ export default {
     BoardMenu,
     BoardTitle,
     ListCard,
-    ListCreationButtons
+    ListCreationButtons,
+    ItemDialog
   },
   props: {
     boardId: {
@@ -95,10 +104,10 @@ export default {
     this.selectBoard(this.boardId)
   },
   computed: {
-    ...mapGetters('boards', ['boardOfId'])
+    ...mapGetters('boards', ['boardOfId', 'selectedItem'])
   },
   methods: {
-    ...mapActions('boards', ['selectBoard']),
+    ...mapActions('boards', ['selectBoard', 'selectItem']),
     ...mapActions('draggable', ['dragStarted', 'dragStopped'])
   }
 }

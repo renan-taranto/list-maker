@@ -9,11 +9,51 @@ const boards = {
                 title: 'Welcome!',
                 open: true,
                 lists: [
-                    { id: '0', title: "To Do", items: [{id: '0', title: 'Task A'}, {id: 1, title: 'Task D'}, {id: 2, title: 'Task G'}] },
-                    { id: '1', title: "Doing", items: [{id: '3', title: 'Task B'}, {id: 4, title: 'Task C'}, {id: 5, title: 'Task F'}] },
-                    { id: '2', title: "Testing", items: [{id: '6', title: 'Task K'}, {id: 7, title: 'Task L'}, {id: 8, title: 'Task M'}] },
-                    { id: '3', title: "Waiting Deploy", items: [{id: '9', title: 'Task N'}, {id: 10, title: 'Task O'}, {id: 11, title: 'Task P'}] },
-                    { id: '4', title: "Done", items: [{id: '12', title: 'Task H'}, {id: 13, title: 'Task I'}, {id: 14, title: 'Task J'}] }
+                    {
+                        id: '0',
+                        title: "To Do",
+                        items: [
+                            { id: '0', title: 'Task A', description: 'A Description' },
+                            { id: '1', title: 'Task D', description: 'D Description' },
+                            { id: '2', title: 'Task G', description: 'G Description' }
+                        ]
+                    },
+                    {
+                        id: '1',
+                        title: "Doing",
+                        items: [
+                            { id: '3', title: 'Task B', description: 'B Description' },
+                            { id: '4', title: 'Task C', description: 'C Description'},
+                            { id: '5', title: 'Task F', description: 'F Description'}
+                        ]
+                    },
+                    {
+                        id: '2',
+                        title: "Testing",
+                        items: [
+                            { id: '6', title: 'Task K', description: 'K Description' },
+                            { id: '7', title: 'Task L', description: 'L Description' },
+                            { id: '8', title: 'Task M', description: 'M Description' }
+                        ]
+                    },
+                    {
+                        id: '3',
+                        title: "Waiting Deploy",
+                        items: [
+                            { id: '9', title: 'Task N', description: 'N Description' },
+                            { id: '10', title: 'Task O', description: 'O Description' },
+                            { id: '11', title: 'Task P', description: 'P Description'}
+                            ]
+                    },
+                    {
+                        id: '4',
+                        title: "Done",
+                        items: [
+                            { id: '12', title: 'Task H', description: 'H Description' },
+                            { id: '13', title: 'Task I', description: 'I Description' },
+                            { id: '14', title: 'Task J', description: 'A Description' }
+                            ]
+                    }
                 ],
                 archivedLists: []
             },
@@ -23,7 +63,8 @@ const boards = {
             { id: '5', title: 'Sprint 4', open: true, lists: [], archivedLists: [] },
             { id: '6', title: 'Sprint 5', open: false, lists: [], archivedLists: [] }
         ],
-        selectedBoardId: null
+        selectedBoardId: null,
+        selectedItemId: null
     }),
     mutations: {
         ADD_BOARD (state, board) {
@@ -56,6 +97,9 @@ const boards = {
             const listIndex = board.archivedLists.findIndex(l => l.id === listId)
             const list = board.archivedLists.splice(listIndex, 1)[0]
             board.lists.push(list)
+        },
+        SELECT_ITEM(state, itemId) {
+            state.selectedItemId = itemId
         },
         MOVE_LIST(state, { listId, targetBoardId, targetIndex }) {
             const currentListBoard = state.boards.find(b => b.lists.find(l => l.id === listId))
@@ -103,6 +147,9 @@ const boards = {
         restoreList({ commit }, listId) {
             commit('RESTORE_LIST', listId)
         },
+        selectItem({ commit }, itemId) {
+            commit('SELECT_ITEM', itemId)
+        },
         moveList({ commit }, { listId, targetBoardId, targetIndex } ) {
             commit('MOVE_LIST', { listId, targetBoardId, targetIndex })
         },
@@ -143,6 +190,12 @@ const boards = {
         },
         listIndexByListId: (state, getters) => (listId) => {
             return getters.boardHavingListOfId(listId).lists.indexOf(getters.listOfId(listId))
+        },
+        selectedItem: (state) => {
+            const item = state.boards.reduce((boards, board) => boards.concat(board.lists), [])
+                .reduce((lists, list) => lists.concat(list.items), [])
+                .find(item => item.id === state.selectedItemId)
+            return item || null
         }
     }
 }
