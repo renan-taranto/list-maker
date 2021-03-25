@@ -4,7 +4,7 @@
       :class="[ isTextFieldVisible ? 'pa-0' : 'pa-1', 'ml-1', 'mr-1', 'list__header', 'fill-width']"
   >
     <span
-        class="list__title"
+        class="list__title text--unselectable"
         v-if="!isTextFieldVisible"
     >
       {{ listTitle }}
@@ -81,11 +81,5 @@ export default {
 
 .list__title {
   font-size: 16px;
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none
 }
 </style>

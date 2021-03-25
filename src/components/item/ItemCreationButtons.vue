@@ -87,7 +87,7 @@ export default {
   methods: {
     addItemHandler() {
       if (!this.isItemTitleEmpty) {
-        this.addListItem({ listId: this.listId, itemTitle: this.itemTitle })
+        this.addItem({ listId: this.listId, itemTitle: this.itemTitle })
       }
 
       this.isTextAreaVisible = false
@@ -95,7 +95,7 @@ export default {
     cancelAddingItemHandler() {
       this.isTextAreaVisible = false
     },
-    ...mapActions('boards', ['addListItem'])
+    ...mapActions('boards', ['addItem'])
   },
   computed: {
     isItemTitleEmpty () {

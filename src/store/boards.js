@@ -98,9 +98,6 @@ const boards = {
             const list = board.archivedLists.splice(listIndex, 1)[0]
             board.lists.push(list)
         },
-        SELECT_ITEM(state, itemId) {
-            state.selectedItemId = itemId
-        },
         MOVE_LIST(state, { listId, targetBoardId, targetIndex }) {
             const currentListBoard = state.boards.find(b => b.lists.find(l => l.id === listId))
             const currentListIndex = currentListBoard.lists.findIndex(list => list.id === listId)
@@ -113,10 +110,19 @@ const boards = {
                 .find(list => list.id === listId)
             list.title = newTitle
         },
-        ADD_LIST_ITEM(state, { listId, item }) {
+        ADD_ITEM(state, { listId, item }) {
             const list = state.boards.reduce((array, item) => array.concat(item.lists), [])
                 .find(list => list.id === listId)
             list.items.push(item)
+        },
+        SELECT_ITEM(state, itemId) {
+            state.selectedItemId = itemId
+        },
+        UPDATE_ITEM_TITLE(state, { itemId, newTitle }) {
+            state.boards.reduce((boards, board) => boards.concat(board.lists), [])
+                .reduce((lists, list) => lists.concat(list.items), [])
+                .find(item => item.id === itemId)
+                .title = newTitle
         }
     },
     actions: {
@@ -147,19 +153,22 @@ const boards = {
         restoreList({ commit }, listId) {
             commit('RESTORE_LIST', listId)
         },
+        moveList({ commit }, { listId, targetBoardId, targetIndex }) {
+            commit('MOVE_LIST', { listId, targetBoardId, targetIndex })
+        },
+        updateListTitle({ commit }, { listId, newTitle }) {
+            commit('UPDATE_LIST_TITLE', { listId, newTitle })
+            return Promise.resolve()
+        },
+        addItem({ commit }, payload) {
+            commit('ADD_ITEM', { listId: payload.listId, item: { id: uuidv4(), title: payload.itemTitle } })
+            return Promise.resolve()
+        },
         selectItem({ commit }, itemId) {
             commit('SELECT_ITEM', itemId)
         },
-        moveList({ commit }, { listId, targetBoardId, targetIndex } ) {
-            commit('MOVE_LIST', { listId, targetBoardId, targetIndex })
-        },
-        updateListTitle({ commit }, { listId, newTitle } ) {
-            commit('UPDATE_LIST_TITLE', { listId, newTitle } )
-            return Promise.resolve()
-        },
-        addListItem({ commit }, payload) {
-            commit('ADD_LIST_ITEM', { listId: payload.listId, item: { id: uuidv4(), title: payload.itemTitle } })
-            return Promise.resolve()
+        updateItemTitle({ commit }, { itemId, newTitle }) {
+            commit('UPDATE_ITEM_TITLE', { itemId, newTitle })
         }
     },
     getters: {

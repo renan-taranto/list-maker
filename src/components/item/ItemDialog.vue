@@ -10,11 +10,16 @@
           <v-col cols="10">
             <div class="d-flex">
               <v-icon>mdi-id-card</v-icon>
-              <span class="ml-3 headline title">{{ item.title }}</span>
+              <ItemDialogTitle class="ml-3" :item="item"/>
             </div>
           </v-col>
           <v-col cols="2">
-            <v-icon class="float-right">mdi-close</v-icon>
+            <v-icon
+                class="float-right"
+                @click="isDialogVisible = false"
+            >
+              mdi-close
+            </v-icon>
           </v-col>
         </v-row>
 
@@ -64,6 +69,8 @@
 </template>
 
 <script>
+import ItemDialogTitle from '@/components/item/ItemDialogTitle'
+
 export default {
   name: 'ItemDialog',
   props: {
@@ -75,6 +82,7 @@ export default {
       required: true
     }
   },
+  components: { ItemDialogTitle },
   computed: {
     isDialogVisible: {
       get() {
@@ -106,11 +114,5 @@ export default {
 .item-card {
   background: linear-gradient(to right, var(--v-primary-base) 3px, white 0);
   border-radius: 5px;
-}
-
-.title {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 </style>

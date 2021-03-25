@@ -1,12 +1,15 @@
 <template>
-  <div class="title ml-5">
-    <span
-      v-if="!isTextFieldVisible"
-      class="title__span text-h6 text--unselectable"
+  <div
+      class="title"
       @click="isTextFieldVisible = true"
+  >
+    <span
+        v-if="!isTextFieldVisible"
+        class="headline title__span text--unselectable"
     >
-      {{ boardTitle }}
+      {{ item.title }}
     </span>
+
     <v-text-field
         v-else
         autofocus
@@ -14,7 +17,7 @@
         dense
         single-line
         hide-details
-        v-model="boardTitle"
+        v-model="itemTitle"
         background-color="grey lighten-4"
         color="grey lighten-1"
         @focus="$event.target.select()"
@@ -29,48 +32,49 @@
 import { mapActions } from 'vuex'
 
 export default {
-  name: 'BoardTitle',
+  name: 'ItemDialogTitle',
   props: {
-    board: {
+    item: {
       type: Object,
       required: true
     }
   },
-  data() {
+  data () {
     return {
-      boardTitle: this.board.title,
+      itemTitle: this.item.title,
       isTextFieldVisible: false
     }
   },
   methods: {
-    ...mapActions('boards', ['updateBoardTitle']),
+    ...mapActions('boards', ['updateItemTitle']),
     isEmptyString(string) {
       return string.replace(/\s/g, '').length === 0
     },
-    hideTextField() {
+    hideTextField () {
       this.isTextFieldVisible = false
     }
   },
   watch: {
-    boardTitle (newVal, oldVal) {
+    itemTitle(newVal, oldVal) {
       if (this.isEmptyString(newVal)) {
-        this.boardTitle = oldVal
+        this.itemTitle = oldVal
         return
       }
 
-      this.updateBoardTitle({ boardId: this.board.id, newTitle: newVal })
-    },
+      this.updateItemTitle({ itemId: this.item.id, newTitle: newVal })
+    }
   }
 }
 </script>
 
 <style scoped>
 .title {
-  max-width: 50%;
+  max-width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
 .title__span {
   cursor: pointer;
 }
