@@ -2,7 +2,7 @@
   <v-list
       dense
       class="list__content"
-      :color="list.items.length === 0 ? 'white' : '#FAFBE6'"
+      :color="list.items.length === 0 ? 'white' : 'grey lighten-4'"
   >
     <draggable
         :list="list.items"
