@@ -30,9 +30,7 @@
               <span class="ml-1 text-button">Description</span>
             </v-row>
             <v-row class="mt-0 mr-0 ml-4 pl-1 pr-1 pt-0">
-              <v-card-text class="pt-3 grey--text text--darken-2">
-                {{ item.description }}
-              </v-card-text>
+              <ItemDialogDescription class="fill-width" :item="item"/>
             </v-row>
           </v-col>
 
@@ -70,6 +68,7 @@
 
 <script>
 import ItemDialogTitle from '@/components/item/ItemDialogTitle'
+import ItemDialogDescription from '@/components/item/ItemDialogDescription'
 
 export default {
   name: 'ItemDialog',
@@ -82,7 +81,10 @@ export default {
       required: true
     }
   },
-  components: { ItemDialogTitle },
+  components: {
+    ItemDialogTitle,
+    ItemDialogDescription
+  },
   computed: {
     isDialogVisible: {
       get() {

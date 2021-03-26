@@ -123,6 +123,12 @@ const boards = {
                 .reduce((lists, list) => lists.concat(list.items), [])
                 .find(item => item.id === itemId)
                 .title = newTitle
+        },
+        UPDATE_ITEM_DESCRIPTION(state, { itemId, newDescription }) {
+            state.boards.reduce((boards, board) => boards.concat(board.lists), [])
+                .reduce((lists, list) => lists.concat(list.items), [])
+                .find(item => item.id === itemId)
+                .description = newDescription
         }
     },
     actions: {
@@ -161,7 +167,7 @@ const boards = {
             return Promise.resolve()
         },
         addItem({ commit }, payload) {
-            commit('ADD_ITEM', { listId: payload.listId, item: { id: uuidv4(), title: payload.itemTitle } })
+            commit('ADD_ITEM', { listId: payload.listId, item: { id: uuidv4(), title: payload.itemTitle, description: null } })
             return Promise.resolve()
         },
         selectItem({ commit }, itemId) {
@@ -169,6 +175,9 @@ const boards = {
         },
         updateItemTitle({ commit }, { itemId, newTitle }) {
             commit('UPDATE_ITEM_TITLE', { itemId, newTitle })
+        },
+        updateItemDescription({ commit }, { itemId, newDescription }) {
+            commit('UPDATE_ITEM_DESCRIPTION', { itemId, newDescription })
         }
     },
     getters: {
