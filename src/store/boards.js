@@ -124,16 +124,20 @@ const boards = {
             state.selectedItemId = itemId
         },
         UPDATE_ITEM_TITLE(state, { itemId, newTitle }) {
-            state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+            const item = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
                 .reduce((items, list) => items.concat(list.items), [])
-                .find(item => item.id === itemId)
-                .title = newTitle
+                .find(i => i.id === itemId)
+            if (item) {
+                item.title = newTitle
+            }
         },
         UPDATE_ITEM_DESCRIPTION(state, { itemId, newDescription }) {
-            state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+            const item = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
                 .reduce((items, list) => items.concat(list.items), [])
                 .find(item => item.id === itemId)
-                .description = newDescription
+            if (item) {
+                item.description = newDescription
+            }
         },
         ARCHIVE_ITEM(state, itemId) {
             const list = state.boards.reduce((lists, board) => lists.concat(board.lists), [])

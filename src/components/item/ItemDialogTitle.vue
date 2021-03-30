@@ -21,9 +21,9 @@
         background-color="grey lighten-4"
         color="grey lighten-1"
         @focus="$event.target.select()"
-        @keyup.esc="hideTextField"
-        @keyup.enter="hideTextField"
-        v-click-outside="hideTextField"
+        @keyup.esc="isTextFieldVisible = false"
+        @keyup.enter="save"
+        v-click-outside="save"
     />
   </div>
 </template>
@@ -49,18 +49,15 @@ export default {
   },
   methods: {
     ...mapActions('boards', ['updateItemTitle']),
-    hideTextField () {
+    save() {
       this.isTextFieldVisible = false
-    }
-  },
-  watch: {
-    itemTitle(newVal, oldVal) {
-      if (this.isEmptyString(newVal)) {
-        this.itemTitle = oldVal
+
+      if (this.isEmptyString(this.itemTitle)) {
+        this.itemTitle = this.item.title
         return
       }
 
-      this.updateItemTitle({ itemId: this.item.id, newTitle: newVal })
+      this.updateItemTitle({ itemId: this.item.id, newTitle: this.itemTitle })
     }
   }
 }
