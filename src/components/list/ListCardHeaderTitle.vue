@@ -29,9 +29,11 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { stringMixin } from '@/mixins/stringMixin'
 
 export default {
   name: 'ListCardHeaderTitle',
+  mixins: [stringMixin],
   props: {
     list: {
       type: Object,
@@ -60,9 +62,6 @@ export default {
     }
   },
   methods: {
-    isEmptyString(string) {
-      return string.replace(/\s/g, '').length === 0
-    },
     hideTextField () {
       this.isTextFieldVisible = false
     },

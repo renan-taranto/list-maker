@@ -30,9 +30,11 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { stringMixin } from '@/mixins/stringMixin'
 
 export default {
   name: 'ItemDialogTitle',
+  mixins: [stringMixin],
   props: {
     item: {
       type: Object,
@@ -47,9 +49,6 @@ export default {
   },
   methods: {
     ...mapActions('boards', ['updateItemTitle']),
-    isEmptyString(string) {
-      return string.replace(/\s/g, '').length === 0
-    },
     hideTextField () {
       this.isTextFieldVisible = false
     }

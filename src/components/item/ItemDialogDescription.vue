@@ -62,9 +62,11 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { stringMixin } from '@/mixins/stringMixin'
 
 export default {
   name: "ItemDialogDescription",
+  mixins: [stringMixin],
   props: {
     item: {
       type: Object,
@@ -90,9 +92,6 @@ export default {
 
       this.updateItemDescription({ itemId: this.item.id, newDescription: this.itemDescription })
       this.isTextAreaVisible = false
-    },
-    isEmptyString(string) {
-      return string.replace(/\s/g, '').length === 0
     },
     includeOnClickOutside () {
       return [document.querySelector('.cancel')]
