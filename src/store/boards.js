@@ -16,7 +16,8 @@ const boards = {
                             { id: '0', title: 'Task A', description: 'A Description' },
                             { id: '1', title: 'Task D', description: 'D Description' },
                             { id: '2', title: 'Task G', description: 'G Description' }
-                        ]
+                        ],
+                        archivedItems: []
                     },
                     {
                         id: '1',
@@ -25,7 +26,8 @@ const boards = {
                             { id: '3', title: 'Task B', description: 'B Description' },
                             { id: '4', title: 'Task C', description: 'C Description'},
                             { id: '5', title: 'Task F', description: 'F Description'}
-                        ]
+                        ],
+                        archivedItems: []
                     },
                     {
                         id: '2',
@@ -34,7 +36,8 @@ const boards = {
                             { id: '6', title: 'Task K', description: 'K Description' },
                             { id: '7', title: 'Task L', description: 'L Description' },
                             { id: '8', title: 'Task M', description: 'M Description' }
-                        ]
+                        ],
+                        archivedItems: []
                     },
                     {
                         id: '3',
@@ -43,7 +46,8 @@ const boards = {
                             { id: '9', title: 'Task N', description: 'N Description' },
                             { id: '10', title: 'Task O', description: 'O Description' },
                             { id: '11', title: 'Task P', description: 'P Description'}
-                            ]
+                        ],
+                        archivedItems: []
                     },
                     {
                         id: '4',
@@ -52,7 +56,8 @@ const boards = {
                             { id: '12', title: 'Task H', description: 'H Description' },
                             { id: '13', title: 'Task I', description: 'I Description' },
                             { id: '14', title: 'Task J', description: 'A Description' }
-                            ]
+                        ],
+                        archivedItems: []
                     }
                 ],
                 archivedLists: []
@@ -106,12 +111,12 @@ const boards = {
             state.boards.find(b => b.id === targetBoardId).lists.splice(targetIndex, 0, list)
         },
         UPDATE_LIST_TITLE(state, { listId, newTitle }) {
-            const list = state.boards.reduce((array, item) => array.concat(item.lists), [])
+            const list = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
                 .find(list => list.id === listId)
             list.title = newTitle
         },
         ADD_ITEM(state, { listId, item }) {
-            const list = state.boards.reduce((array, item) => array.concat(item.lists), [])
+            const list = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
                 .find(list => list.id === listId)
             list.items.push(item)
         },
@@ -119,16 +124,23 @@ const boards = {
             state.selectedItemId = itemId
         },
         UPDATE_ITEM_TITLE(state, { itemId, newTitle }) {
-            state.boards.reduce((boards, board) => boards.concat(board.lists), [])
-                .reduce((lists, list) => lists.concat(list.items), [])
+            state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+                .reduce((items, list) => items.concat(list.items), [])
                 .find(item => item.id === itemId)
                 .title = newTitle
         },
         UPDATE_ITEM_DESCRIPTION(state, { itemId, newDescription }) {
-            state.boards.reduce((boards, board) => boards.concat(board.lists), [])
-                .reduce((lists, list) => lists.concat(list.items), [])
+            state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+                .reduce((items, list) => items.concat(list.items), [])
                 .find(item => item.id === itemId)
                 .description = newDescription
+        },
+        ARCHIVE_ITEM(state, itemId) {
+            const list = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+                .find(l => l.items.find(item => item.id === itemId))
+            const itemIndex = list.items.findIndex(item => item.id === itemId)
+            const item = list.items.splice(itemIndex, 1)[0]
+            list.archivedItems.push(item)
         }
     },
     actions: {
@@ -178,6 +190,9 @@ const boards = {
         },
         updateItemDescription({ commit }, { itemId, newDescription }) {
             commit('UPDATE_ITEM_DESCRIPTION', { itemId, newDescription })
+        },
+        archiveItem({ commit }, itemId) {
+            commit('ARCHIVE_ITEM', itemId)
         }
     },
     getters: {
@@ -191,7 +206,7 @@ const boards = {
             return state.boards.find(b => b.id === id)
         },
         listOfId: (state) => (id) => {
-            return state.boards.reduce((array, item) => array.concat(item.lists), [])
+            return state.boards.reduce((lists, board) => lists.concat(board.lists), [])
                 .find(list => list.id === id)
         },
         boardListsCount: (state, getters) => (id) => {
@@ -210,8 +225,8 @@ const boards = {
             return getters.boardHavingListOfId(listId).lists.indexOf(getters.listOfId(listId))
         },
         selectedItem: (state) => {
-            const item = state.boards.reduce((boards, board) => boards.concat(board.lists), [])
-                .reduce((lists, list) => lists.concat(list.items), [])
+            const item = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+                .reduce((items, list) => items.concat(list.items), [])
                 .find(item => item.id === state.selectedItemId)
             return item || null
         }

@@ -54,6 +54,7 @@
                     color="primary"
                     width="85"
                     class="mt-sm-1"
+                    @click="archiveItem(item.id)"
                 >
                   Archive
                 </v-btn>
@@ -67,6 +68,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import ItemDialogTitle from '@/components/item/ItemDialogTitle'
 import ItemDialogDescription from '@/components/item/ItemDialogDescription'
 
@@ -108,6 +110,9 @@ export default {
           return '40%'
       }
     }
+  },
+  methods: {
+    ...mapActions('boards', ['archiveItem'])
   }
 }
 </script>
