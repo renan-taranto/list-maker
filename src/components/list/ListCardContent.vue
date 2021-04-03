@@ -24,7 +24,7 @@
       >
         <v-hover v-slot="{ hover }">
           <div
-              @click="selectItem(item.id)"
+              @click.stop="selectItem(item.id)"
               :class="[
                   'item',
                   'fill-width',

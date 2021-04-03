@@ -9,13 +9,13 @@
   >
     <v-list-item>
       <v-list-item-content>
-        <v-list-item-title class="text-center primary--text">{{ title }}</v-list-item-title>
+        <v-list-item-title class="text-center primary--text">{{ menuTitle }}</v-list-item-title>
         <v-btn
-            v-if="isListRestoringCardVisible"
+            v-if="selectedOptionComponent"
             icon
             absolute
             left
-            @click="isListRestoringCardVisible = false"
+            @click="selectedOptionComponent = null"
         >
           <v-icon small>mdi-arrow-left</v-icon>
         </v-btn>
@@ -32,38 +32,42 @@
 
     <v-divider></v-divider>
 
-    <div v-if="!isListRestoringCardVisible">
+    <div v-if="!selectedOptionComponent">
       <v-list dense>
         <v-list-item
-            v-for="item in items"
-            :key="item.title"
+            v-for="option in options"
+            :key="option.title"
             link
-            @click="handleClick(item.onClick)"
+            @click="handleClick(option.onClick)"
         >
           <v-list-item-icon>
-            <v-icon color="primary">{{ item.icon }}</v-icon>
+            <v-icon color="primary">{{ option.icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title class="grey--text text--darken-2">{{ item.title }}</v-list-item-title>
+            <v-list-item-title class="grey--text text--darken-2">{{ option.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
     </div>
 
     <v-slide-x-reverse-transition hide-on-leave>
-      <ListRestoringCard v-if="isListRestoringCardVisible" :board-id="boardId"/>
+      <component v-if="selectedOptionComponent" :is="selectedOptionComponent" :board-id="boardId"/>
     </v-slide-x-reverse-transition>
   </v-navigation-drawer>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import ItemRestoringCard from '@/components/board/ItemRestoringCard'
 import ListRestoringCard from '@/components/board/ListRestoringCard'
 
 export default {
   name: 'BoardMenu',
-  components: { ListRestoringCard },
+  components: {
+    ItemRestoringCard,
+    ListRestoringCard
+  },
   props: {
     isMenuVisible: {
       type: Boolean,
@@ -77,11 +81,12 @@ export default {
   },
   data() {
     return {
-      items: [
+      options: [
         { title: 'Restore List', icon: 'mdi-restore', onClick: 'showListRestoringCard' },
+        { title: 'Restore Item', icon: 'mdi-file-restore-outline', onClick: 'showItemRestoringCard' },
         { title: 'Close Board', icon: 'mdi-close', onClick: 'closeTheBoard' }
       ],
-      isListRestoringCardVisible: false
+      selectedOptionComponent: null
     }
   },
   computed: {
@@ -91,13 +96,17 @@ export default {
       },
       set(val) {
         if (val === false) {
+          this.selectedOptionComponent = null
           this.$emit('menu-closed')
-          this.isListRestoringCardVisible = false
         }
       }
     },
-    title() {
-      return this.isListRestoringCardVisible ? 'Restore List' : 'Menu'
+    menuTitle() {
+      const titlePerComponent = {
+        'ListRestoringCard': 'Restore List',
+        'ItemRestoringCard': 'Restore Item'
+      }
+      return this.selectedOptionComponent ? titlePerComponent[this.selectedOptionComponent.name] : 'Menu'
     }
   },
   methods: {
@@ -106,7 +115,10 @@ export default {
       this[functionName]()
     },
     showListRestoringCard () {
-      this.isListRestoringCardVisible = true
+      this.selectedOptionComponent = ListRestoringCard
+    },
+    showItemRestoringCard () {
+      this.selectedOptionComponent = ItemRestoringCard
     },
     closeTheBoard() {
       this.closeBoard(this.boardId)

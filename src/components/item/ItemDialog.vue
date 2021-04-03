@@ -1,8 +1,8 @@
 <template>
   <v-dialog
-      v-if="item !== null"
+      v-if="selectedItem !== null"
+      v-model="isVisible"
       :max-width="dialogWidth"
-      v-model="isDialogVisible"
   >
     <v-card class="item-card">
       <v-container class="pt-0">
@@ -10,13 +10,13 @@
           <v-col cols="10">
             <div class="d-flex">
               <v-icon>mdi-id-card</v-icon>
-              <ItemDialogTitle class="ml-3" :item="item"/>
+              <ItemDialogTitle class="ml-3" :item="selectedItem"/>
             </div>
           </v-col>
           <v-col cols="2">
             <v-icon
                 class="float-right"
-                @click="isDialogVisible = false"
+                @click="isVisible = false"
             >
               mdi-close
             </v-icon>
@@ -30,7 +30,7 @@
               <span class="ml-1 text-button">Description</span>
             </v-row>
             <v-row class="mt-0 mr-0 ml-4 pl-1 pr-1 pt-0">
-              <ItemDialogDescription class="fill-width" :item="item"/>
+              <ItemDialogDescription class="fill-width" :item="selectedItem"/>
             </v-row>
           </v-col>
 
@@ -54,7 +54,7 @@
                     color="primary"
                     width="85"
                     class="mt-sm-1"
-                    @click="archiveItem(item.id)"
+                    @click="archiveItem(selectedItem.id)"
                 >
                   Archive
                 </v-btn>
@@ -68,19 +68,15 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import ItemDialogTitle from '@/components/item/ItemDialogTitle'
 import ItemDialogDescription from '@/components/item/ItemDialogDescription'
 
 export default {
   name: 'ItemDialog',
-  props: {
-    item: {
-      type: Object
-    },
-    isVisible: {
-      type: Boolean,
-      required: true
+  data() {
+    return {
+      isVisible: null
     }
   },
   components: {
@@ -88,16 +84,7 @@ export default {
     ItemDialogDescription
   },
   computed: {
-    isDialogVisible: {
-      get() {
-        return this.isVisible
-      },
-      set(val) {
-        if (val === false) {
-          this.$emit('dialog-closed')
-        }
-      }
-    },
+    ...mapGetters('boards', ['selectedItem']),
     dialogWidth() {
       switch (this.$vuetify.breakpoint.name) {
         case 'xs':
@@ -112,7 +99,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions('boards', ['archiveItem'])
+    ...mapActions('boards', ['selectItem', 'archiveItem']),
+  },
+  watch: {
+    isVisible(val) {
+      if (val !== true) {
+        this.selectItem(null)
+      }
+    },
+    selectedItem(val) {
+      this.isVisible = val !== null
+    }
   }
 }
 </script>

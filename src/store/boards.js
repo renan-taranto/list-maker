@@ -145,6 +145,12 @@ const boards = {
             const itemIndex = list.items.findIndex(item => item.id === itemId)
             const item = list.items.splice(itemIndex, 1)[0]
             list.archivedItems.push(item)
+        },
+        RESTORE_ITEM(state, { list, itemId }) {
+            const itemIndex = list.archivedItems.findIndex(item => item.id === itemId)
+            if (itemIndex > -1) {
+                list.items.push(list.archivedItems.splice(itemIndex, 1)[0])
+            }
         }
     },
     actions: {
@@ -197,6 +203,12 @@ const boards = {
         },
         archiveItem({ commit }, itemId) {
             commit('ARCHIVE_ITEM', itemId)
+        },
+        restoreItem({ commit, getters }, { boardId, itemId }) {
+            const list = getters.listFromBoardHavingItemOfId({ boardId, itemId })
+            if (list !== undefined) {
+                commit('RESTORE_ITEM', { list, itemId })
+            }
         }
     },
     getters: {
@@ -216,6 +228,10 @@ const boards = {
         boardListsCount: (state, getters) => (id) => {
             return getters.boardOfId(id).lists.length
         },
+        allListsFromBoard: (state, getters) => (boardId) => {
+            const board = getters.boardOfId(boardId)
+            return [...board.lists, ...board.archivedLists]
+        },
         archivedBoardLists: (state, getters) => (boardId) => {
             return getters.boardOfId(boardId).archivedLists
         },
@@ -228,11 +244,20 @@ const boards = {
         listIndexByListId: (state, getters) => (listId) => {
             return getters.boardHavingListOfId(listId).lists.indexOf(getters.listOfId(listId))
         },
+        listFromBoardHavingItemOfId: (state, getters) => ({ boardId, itemId }) => {
+            return getters.allListsFromBoard(boardId).find(list => {
+                const items = [...list.items, ...list.archivedItems]
+                return items.find(item => item.id === itemId)
+            })
+        },
         selectedItem: (state) => {
             const item = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
                 .reduce((items, list) => items.concat(list.items), [])
                 .find(item => item.id === state.selectedItemId)
             return item || null
+        },
+        archivedBoardItems: (state, getters) => (boardId) => {
+            return getters.allListsFromBoard(boardId).reduce((archivedItems, list) => archivedItems.concat(list.archivedItems), [])
         }
     }
 }

@@ -53,12 +53,7 @@
       </v-col>
     </draggable>
 
-    <ItemDialog
-        v-if="selectedItem !== null"
-        :item="selectedItem"
-        :is-visible="selectedItem !== null"
-        @dialog-closed="selectItem(null)"
-    />
+    <ItemDialog/>
   </v-container>
 </template>
 
@@ -104,10 +99,10 @@ export default {
     this.selectBoard(this.boardId)
   },
   computed: {
-    ...mapGetters('boards', ['boardOfId', 'selectedItem'])
+    ...mapGetters('boards', ['boardOfId'])
   },
   methods: {
-    ...mapActions('boards', ['selectBoard', 'selectItem']),
+    ...mapActions('boards', ['selectBoard']),
     ...mapActions('draggable', ['dragStarted', 'dragStopped'])
   }
 }
