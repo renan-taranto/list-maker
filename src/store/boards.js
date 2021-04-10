@@ -93,15 +93,12 @@ const boards = {
         ARCHIVE_LIST(state, listId) {
             const board = state.boards.find(b => b.lists.find(l => l.id === listId))
             const listIndex = board.lists.findIndex(list => list.id === listId)
-            const list = board.lists[listIndex]
-            board.lists.splice(listIndex, 1)
-            board.archivedLists.push(list)
+            board.archivedLists.push(board.lists.splice(listIndex, 1)[0])
         },
         RESTORE_LIST(state, listId) {
             const board = state.boards.find(b => b.archivedLists.find(l => l.id === listId))
-            const listIndex = board.archivedLists.findIndex(l => l.id === listId)
-            const list = board.archivedLists.splice(listIndex, 1)[0]
-            board.lists.push(list)
+            const listIndex = board.archivedLists.findIndex(list => list.id === listId)
+            board.lists.push(board.archivedLists.splice(listIndex, 1)[0])
         },
         MOVE_LIST(state, { listId, targetBoardId, targetIndex }) {
             const currentListBoard = state.boards.find(b => b.lists.find(l => l.id === listId))
@@ -143,14 +140,13 @@ const boards = {
             const list = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
                 .find(l => l.items.find(item => item.id === itemId))
             const itemIndex = list.items.findIndex(item => item.id === itemId)
-            const item = list.items.splice(itemIndex, 1)[0]
-            list.archivedItems.push(item)
+            list.archivedItems.push(list.items.splice(itemIndex, 1)[0])
         },
-        RESTORE_ITEM(state, { list, itemId }) {
+        RESTORE_ITEM(state, itemId) {
+            const list = state.boards.reduce((lists, board) => lists.concat([...board.lists, ...board.archivedLists]), [])
+                .find(l => l.archivedItems.find(item => item.id === itemId))
             const itemIndex = list.archivedItems.findIndex(item => item.id === itemId)
-            if (itemIndex > -1) {
-                list.items.push(list.archivedItems.splice(itemIndex, 1)[0])
-            }
+            list.items.push(list.archivedItems.splice(itemIndex, 1)[0])
         }
     },
     actions: {
@@ -172,7 +168,7 @@ const boards = {
             commit('UPDATE_BOARD_TITLE', { boardId, newTitle })
         },
         addList ({ commit }, { boardId, listTitle }) {
-            commit('ADD_LIST', { boardId: boardId, list: { id: uuidv4(), title: listTitle, items: [] } })
+            commit('ADD_LIST', { boardId: boardId, list: { id: uuidv4(), title: listTitle, items: [], archivedItems: [] } })
             return Promise.resolve()
         },
         archiveList({ commit }, listId) {
@@ -204,11 +200,8 @@ const boards = {
         archiveItem({ commit }, itemId) {
             commit('ARCHIVE_ITEM', itemId)
         },
-        restoreItem({ commit, getters }, { boardId, itemId }) {
-            const list = getters.listFromBoardHavingItemOfId({ boardId, itemId })
-            if (list !== undefined) {
-                commit('RESTORE_ITEM', { list, itemId })
-            }
+        restoreItem({ commit }, itemId) {
+            commit('RESTORE_ITEM', itemId)
         }
     },
     getters: {
@@ -221,12 +214,15 @@ const boards = {
         boardOfId: (state) => (id) => {
             return state.boards.find(b => b.id === id)
         },
+        boardListsCount: (state, getters) => (id) => {
+            return getters.boardOfId(id).lists.length
+        },
+        selectedBoard: (state, getters) => {
+            return getters.boardOfId(state.selectedBoardId)
+        },
         listOfId: (state) => (id) => {
             return state.boards.reduce((lists, board) => lists.concat(board.lists), [])
                 .find(list => list.id === id)
-        },
-        boardListsCount: (state, getters) => (id) => {
-            return getters.boardOfId(id).lists.length
         },
         allListsFromBoard: (state, getters) => (boardId) => {
             const board = getters.boardOfId(boardId)
@@ -235,20 +231,9 @@ const boards = {
         archivedBoardLists: (state, getters) => (boardId) => {
             return getters.boardOfId(boardId).archivedLists
         },
-        selectedBoard: (state, getters) => {
-            return getters.boardOfId(state.selectedBoardId)
-        },
-        boardHavingListOfId: (state) => (listId) => {
-            return state.boards.find(b => b.lists.find(l => l.id === listId))
-        },
         listIndexByListId: (state, getters) => (listId) => {
-            return getters.boardHavingListOfId(listId).lists.indexOf(getters.listOfId(listId))
-        },
-        listFromBoardHavingItemOfId: (state, getters) => ({ boardId, itemId }) => {
-            return getters.allListsFromBoard(boardId).find(list => {
-                const items = [...list.items, ...list.archivedItems]
-                return items.find(item => item.id === itemId)
-            })
+            const board = state.boards.find(b => b.lists.find(l => l.id === listId))
+            return board.lists.indexOf(getters.listOfId(listId))
         },
         selectedItem: (state) => {
             const item = state.boards.reduce((lists, board) => lists.concat(board.lists), [])

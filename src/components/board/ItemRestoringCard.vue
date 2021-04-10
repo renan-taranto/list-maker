@@ -13,7 +13,7 @@
           x-small
           icon
           color="green"
-          @click="restoreItem({ boardId: boardId, itemId: item.id })"
+          @click="restoreItem(item.id)"
       >
         <v-icon>mdi-restore</v-icon>
       </v-btn>
