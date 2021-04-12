@@ -22,7 +22,9 @@
             </v-icon>
           </v-col>
         </v-row>
-
+        <v-card-subtitle class="pa-0 pl-1 text-caption">
+          on list <span class="text-decoration-underline">{{ selectedItemList.title }}</span>
+        </v-card-subtitle>
         <v-row>
           <v-col cols="12" sm="9">
             <v-row class="ml-1">
@@ -79,7 +81,7 @@ export default {
     ItemDialogMovingMenu
   },
   computed: {
-    ...mapGetters('boards', ['selectedItem']),
+    ...mapGetters('boards', ['selectedItem', 'selectedItemList']),
     dialogWidth() {
       switch (this.$vuetify.breakpoint.name) {
         case 'xs':
