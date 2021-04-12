@@ -29,6 +29,7 @@
                   'item',
                   'fill-width',
                   'pa-2',
+                  'text--unselectable',
                   hover && !dragging ? 'item--hover': ''
                 ]"
           >
