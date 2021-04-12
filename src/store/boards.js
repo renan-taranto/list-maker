@@ -147,6 +147,15 @@ const boards = {
                 .find(l => l.archivedItems.find(item => item.id === itemId))
             const itemIndex = list.archivedItems.findIndex(item => item.id === itemId)
             list.items.push(list.archivedItems.splice(itemIndex, 1)[0])
+        },
+        MOVE_ITEM(state, { itemId, targetListId, targetIndex }) {
+            const currentList = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+                .find(list => list.items.find(item => item.id === itemId))
+            const currentItemIndex = currentList.items.findIndex(item => item.id === itemId)
+            const targetList = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+                .find(list => list.id === targetListId)
+
+            targetList.items.splice(targetIndex, 0, currentList.items.splice(currentItemIndex, 1)[0])
         }
     },
     actions: {
@@ -202,6 +211,9 @@ const boards = {
         },
         restoreItem({ commit }, itemId) {
             commit('RESTORE_ITEM', itemId)
+        },
+        moveItem({ commit }, { itemId, targetListId, targetIndex }) {
+            commit('MOVE_ITEM', { itemId, targetListId, targetIndex })
         }
     },
     getters: {
@@ -228,6 +240,9 @@ const boards = {
             const board = getters.boardOfId(boardId)
             return [...board.lists, ...board.archivedLists]
         },
+        openListsFromBoard: (state, getters) => (boardId) => {
+            return getters.boardOfId(boardId).lists
+        },
         archivedBoardLists: (state, getters) => (boardId) => {
             return getters.boardOfId(boardId).archivedLists
         },
@@ -243,6 +258,24 @@ const boards = {
         },
         archivedBoardItems: (state, getters) => (boardId) => {
             return getters.allListsFromBoard(boardId).reduce((archivedItems, list) => archivedItems.concat(list.archivedItems), [])
+        },
+        listItemsCount: (state, getters) => (listId) => {
+            return getters.listOfId(listId).items.length
+        },
+        selectedItemList: (state, getters) => {
+            if (state.selectedItemId === null) {
+                return null
+            }
+
+            return getters.openBoards.reduce((lists, board) => lists.concat(board.lists), [])
+                .find(list => list.items.find(item => item.id === state.selectedItemId))
+        },
+        selectedItemIndex: (state, getters) => {
+            if (state.selectedItemId === null) {
+                return null
+            }
+
+            return getters.selectedItemList.items.findIndex(item => item.id === state.selectedItemId)
         }
     }
 }

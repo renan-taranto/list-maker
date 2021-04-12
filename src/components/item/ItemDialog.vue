@@ -41,14 +41,7 @@
             </v-row>
             <v-row class="mt-0 mr-0 ml-0 pl-1 pr-1 pt-0" :justify="'end'">
               <div class="d-flex flex-sm-column">
-                <v-btn
-                    small
-                    color="primary"
-                    width="85"
-                    class="mr-1"
-                >
-                  Move
-                </v-btn>
+                <ItemDialogMovingMenu @item-moved-to-another-board="isVisible = false"/>
                 <v-btn
                     small
                     color="primary"
@@ -71,6 +64,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import ItemDialogTitle from '@/components/item/ItemDialogTitle'
 import ItemDialogDescription from '@/components/item/ItemDialogDescription'
+import ItemDialogMovingMenu from '@/components/item/ItemDialogMovingMenu'
 
 export default {
   name: 'ItemDialog',
@@ -81,7 +75,8 @@ export default {
   },
   components: {
     ItemDialogTitle,
-    ItemDialogDescription
+    ItemDialogDescription,
+    ItemDialogMovingMenu
   },
   computed: {
     ...mapGetters('boards', ['selectedItem']),
