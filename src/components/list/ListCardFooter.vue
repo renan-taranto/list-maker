@@ -66,7 +66,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       isTextAreaVisible: false,
       itemTitle: ''
@@ -85,14 +85,14 @@ export default {
     }
   },
   methods: {
-    addItemHandler() {
+    addItemHandler () {
       if (!this.isItemTitleEmpty) {
         this.addItem({ listId: this.listId, itemTitle: this.itemTitle })
       }
 
       this.isTextAreaVisible = false
     },
-    cancelAddingItemHandler() {
+    cancelAddingItemHandler () {
       this.isTextAreaVisible = false
     },
     ...mapActions('boards', ['addItem'])

@@ -65,7 +65,7 @@ import { mapActions } from 'vuex'
 import { stringMixin } from '@/mixins/stringMixin'
 
 export default {
-  name: "ItemDialogDescription",
+  name: 'ItemDialogDescription',
   mixins: [stringMixin],
   props: {
     item: {
@@ -73,7 +73,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       isTextAreaVisible: false,
       itemDescription: this.item.description

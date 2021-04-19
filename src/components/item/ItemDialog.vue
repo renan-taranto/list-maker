@@ -70,7 +70,7 @@ import ItemDialogMovingMenu from '@/components/item/ItemDialogMovingMenu'
 
 export default {
   name: 'ItemDialog',
-  data() {
+  data () {
     return {
       isVisible: null
     }
@@ -82,7 +82,7 @@ export default {
   },
   computed: {
     ...mapGetters('boards', ['selectedItem', 'selectedItemList']),
-    dialogWidth() {
+    dialogWidth () {
       switch (this.$vuetify.breakpoint.name) {
         case 'xs':
           return '100%'
@@ -96,15 +96,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions('boards', ['selectItem', 'archiveItem']),
+    ...mapActions('boards', ['selectItem', 'archiveItem'])
   },
   watch: {
-    isVisible(val) {
+    isVisible (val) {
       if (val !== true) {
         this.selectItem(null)
       }
     },
-    selectedItem(val) {
+    selectedItem (val) {
       this.isVisible = val !== null
     }
   }

@@ -70,7 +70,7 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       items: [
         { title: 'Reopen Board', icon: 'mdi-restore', onClick: 'showBoardReopeningCard' }
@@ -80,25 +80,25 @@ export default {
   },
   computed: {
     isDrawerVisible: {
-      get() {
+      get () {
         return this.isMenuVisible
       },
-      set(val) {
+      set (val) {
         if (val === false) {
           this.$emit('menu-closed')
           this.isBoardReopeningCardVisible = false
         }
       }
     },
-    title() {
+    title () {
       return this.isBoardReopeningCardVisible ? 'Reopen Board' : 'Menu'
     }
   },
   methods: {
-    handleClick(functionName) {
+    handleClick (functionName) {
       this[functionName]()
     },
-    showBoardReopeningCard() {
+    showBoardReopeningCard () {
       this.isBoardReopeningCardVisible = true
     }
   }

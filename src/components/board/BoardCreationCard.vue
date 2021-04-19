@@ -77,7 +77,7 @@ import { mapActions } from 'vuex'
 import ErrorDialog from '@/components/layout/ErrorDialog'
 
 export default {
-  name: "BoardCreationCard",
+  name: 'BoardCreationCard',
   components: {
     ErrorDialog
   },
@@ -89,18 +89,18 @@ export default {
     }
   },
   watch: {
-    isTextAreaVisible(newValue) {
+    isTextAreaVisible (newValue) {
       if (newValue === false) {
         this.boardTitle = ''
       }
     }
   },
   methods: {
-    async addBoardHandler() {
-      this.isTextAreaVisible = false;
+    async addBoardHandler () {
+      this.isTextAreaVisible = false
 
       if (this.isBoardTitleEmpty) {
-        return;
+        return
       }
 
       try {
@@ -109,13 +109,13 @@ export default {
         this.isErrorDialogVisible = true
       }
     },
-    cancelAddingBoardHandler() {
+    cancelAddingBoardHandler () {
       this.isTextAreaVisible = false
     },
     ...mapActions('boards', { add: 'addBoard' })
   },
   computed: {
-    isBoardTitleEmpty() {
+    isBoardTitleEmpty () {
       return this.boardTitle.replace(/\s/g, '').length === 0
     }
   }

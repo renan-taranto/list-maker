@@ -38,7 +38,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       boardTitle: this.board.title,
       isTextFieldVisible: false
@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     ...mapActions('boards', ['updateBoardTitle']),
-    hideTextField() {
+    hideTextField () {
       this.isTextFieldVisible = false
     }
   },
@@ -58,7 +58,7 @@ export default {
       }
 
       this.updateBoardTitle({ boardId: this.board.id, newTitle: newVal })
-    },
+    }
   }
 }
 </script>

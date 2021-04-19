@@ -120,7 +120,7 @@
 <script>
 
 export default {
-  name: "AppHeader",
+  name: 'AppHeader',
 
   data: () => ({
     drawer: false,
@@ -129,13 +129,13 @@ export default {
     links: [
       { text: 'Home', icon: 'mdi-home-outline' },
       { text: 'Docs', icon: 'mdi-file-document-multiple-outline' },
-      { text: 'Github', icon: 'mdi-github'},
+      { text: 'Github', icon: 'mdi-github' }
     ]
   }),
   watch: {
     group () {
       this.drawer = false
-    },
+    }
   }
 }
 </script>

@@ -79,7 +79,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       options: [
         { title: 'Restore List', icon: 'mdi-restore', onClick: 'showListRestoringCard' },
@@ -91,27 +91,27 @@ export default {
   },
   computed: {
     isDrawerVisible: {
-      get() {
+      get () {
         return this.isMenuVisible
       },
-      set(val) {
+      set (val) {
         if (val === false) {
           this.selectedOptionComponent = null
           this.$emit('menu-closed')
         }
       }
     },
-    menuTitle() {
+    menuTitle () {
       const titlePerComponent = {
-        'ListRestoringCard': 'Restore List',
-        'ItemRestoringCard': 'Restore Item'
+        ListRestoringCard: 'Restore List',
+        ItemRestoringCard: 'Restore Item'
       }
       return this.selectedOptionComponent ? titlePerComponent[this.selectedOptionComponent.name] : 'Menu'
     }
   },
   methods: {
     ...mapActions('boards', ['closeBoard']),
-    handleClick(functionName) {
+    handleClick (functionName) {
       this[functionName]()
     },
     showListRestoringCard () {
@@ -120,7 +120,7 @@ export default {
     showItemRestoringCard () {
       this.selectedOptionComponent = ItemRestoringCard
     },
-    closeTheBoard() {
+    closeTheBoard () {
       this.closeBoard(this.boardId)
       this.$router.push({ name: 'BoardsView' })
     }

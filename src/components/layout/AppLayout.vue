@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import AppHeader from "./AppHeader"
+import AppHeader from './AppHeader'
 
 export default {
-  name: "AppLayout",
+  name: 'AppLayout',
   components: {
     AppHeader
   }

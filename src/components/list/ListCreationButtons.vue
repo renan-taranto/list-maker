@@ -104,7 +104,7 @@ export default {
       this.isTextAreaVisible = false
 
       if (this.isListTitleEmpty) {
-        return;
+        return
       }
 
       try {

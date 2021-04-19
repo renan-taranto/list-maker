@@ -45,7 +45,7 @@ export default {
   },
   computed: {
     ...mapGetters('boards', ['archivedBoardItems']),
-    archivedItems() {
+    archivedItems () {
       return this.archivedBoardItems(this.boardId)
     }
   },

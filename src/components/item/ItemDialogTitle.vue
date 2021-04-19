@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     ...mapActions('boards', ['updateItemTitle']),
-    save() {
+    save () {
       this.isTextFieldVisible = false
 
       if (this.isEmptyString(this.itemTitle)) {

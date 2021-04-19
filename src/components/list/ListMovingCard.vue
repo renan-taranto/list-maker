@@ -48,18 +48,18 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       targetBoard: null,
       targetPosition: null
     }
   },
-  beforeMount() {
+  beforeMount () {
     this.targetBoard = this.selectedBoard
   },
   computed: {
     ...mapGetters('boards', ['selectedBoard', 'openBoards', 'boardListsCount', 'listIndexByListId']),
-    availablePositions() {
+    availablePositions () {
       const positions = []
       for (let i = 1; i <= this.boardListsCount(this.targetBoard.id); i++) {
         positions.push(i)
@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     ...mapActions('boards', ['moveList']),
-    setDefaultTargetPosition() {
+    setDefaultTargetPosition () {
       if (this.targetBoard === null) {
         this.targetPosition = null
         return
@@ -82,13 +82,13 @@ export default {
 
       this.targetPosition = this.targetBoard.id === this.selectedBoard.id ? this.listIndexByListId(this.listId) + 1 : 1
     },
-    move() {
+    move () {
       this.moveList({ listId: this.listId, targetBoardId: this.targetBoard.id, targetIndex: this.targetPosition - 1 })
       this.$emit('list-moved')
     }
   },
   watch: {
-    targetBoard() {
+    targetBoard () {
       this.setDefaultTargetPosition()
     }
   }

@@ -68,7 +68,7 @@ import ItemDialog from '@/components/item/ItemDialog'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
-  name: "BoardView",
+  name: 'BoardView',
   components: {
     draggable,
     PageHeader,
@@ -90,9 +90,9 @@ export default {
       isMenuVisible: false
     }
   },
-  mounted() {
+  mounted () {
     this.board = this.boardOfId(this.boardId)
-    if (typeof this.board !== "object") {
+    if (typeof this.board !== 'object') {
       this.$router.push({ name: 'NotFound' })
     }
 

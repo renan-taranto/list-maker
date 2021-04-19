@@ -60,14 +60,14 @@ import PageHeader from '@/components/layout/PageHeader'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: "BoardsView",
+  name: 'BoardsView',
   components: {
     BoardCreationCard,
     BoardCard,
     BoardsMenu,
     PageHeader
   },
-  data() {
+  data () {
     return {
       isMenuVisible: false
     }

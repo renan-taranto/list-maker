@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import {  mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import ListMovingCard from '@/components/list/ListMovingCard'
 
 export default {
@@ -99,7 +99,7 @@ export default {
     }
   },
   watch: {
-    isVisible(val) {
+    isVisible (val) {
       if (val === false) {
         this.hideListMovingCard()
       }

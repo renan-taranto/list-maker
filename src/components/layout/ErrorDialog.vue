@@ -54,7 +54,7 @@
 
 <script>
 export default {
-  name: "ErrorDialog",
+  name: 'ErrorDialog',
   props: {
     show: {
       type: Boolean,

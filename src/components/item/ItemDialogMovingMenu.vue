@@ -96,15 +96,15 @@
 import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'ItemDialogMovingMenu',
-  data() {
+  data () {
     return {
       isOpen: false,
       targetBoard: null,
       targetList: null,
-      targetPosition: null,
+      targetPosition: null
     }
   },
-  beforeMount() {
+  beforeMount () {
     this.targetBoard = this.selectedBoard
   },
   computed: {
@@ -117,13 +117,13 @@ export default {
       'selectedItemList',
       'selectedItemIndex'
     ]),
-    availableLists() {
+    availableLists () {
       if (!this.targetBoard) {
         return []
       }
       return this.openListsFromBoard(this.targetBoard.id)
     },
-    availablePositions() {
+    availablePositions () {
       if (!this.targetList) {
         return []
       }
@@ -142,7 +142,7 @@ export default {
   },
   methods: {
     ...mapActions('boards', ['moveItem']),
-    move() {
+    move () {
       if (!this.targetList || !this.targetPosition) {
         return
       }
@@ -161,7 +161,7 @@ export default {
     }
   },
   watch: {
-    targetBoard(newVal) {
+    targetBoard (newVal) {
       if (newVal.id === this.selectedBoard.id) {
         this.targetList = this.selectedItemList
         this.targetPosition = this.selectedItemIndex + 1
@@ -171,7 +171,7 @@ export default {
       this.targetList = newVal.lists[0]
       this.targetPosition = 1
     },
-    targetList(newVal) {
+    targetList (newVal) {
       if (!newVal) {
         return null
       }

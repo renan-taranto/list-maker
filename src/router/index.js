@@ -14,7 +14,7 @@ const routes = [
     children: [
       {
         path: '/',
-        redirect: '/boards',
+        redirect: '/boards'
       },
       {
         path: '/boards',

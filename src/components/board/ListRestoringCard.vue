@@ -45,7 +45,7 @@ export default {
   },
   computed: {
     ...mapGetters('boards', ['archivedBoardLists']),
-    archivedLists() {
+    archivedLists () {
       return this.archivedBoardLists(this.boardId)
     }
   },

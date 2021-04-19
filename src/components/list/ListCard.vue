@@ -34,7 +34,7 @@ export default {
       list: null
     }
   },
-  mounted() {
+  mounted () {
     this.list = this.listOfId(this.listId)
   },
   computed: {

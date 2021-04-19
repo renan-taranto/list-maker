@@ -20,7 +20,7 @@
 
 <script>
 export default {
-  name: "BoardCard",
+  name: 'BoardCard',
   props: {
     board: {
       type: Object,
