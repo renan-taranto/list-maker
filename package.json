@@ -11,6 +11,7 @@
     "core-js": "^3.6.5",
     "uuid": "^8.3.2",
     "vue": "^2.6.11",
+    "vue-dragscroll": "^3.0.0",
     "vue-router": "^3.2.0",
     "vuedraggable": "^2.24.0",
     "vuetify": "^2.2.11",

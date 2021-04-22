@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <AppHeader/>
-    <v-main class="main-content overflow-x-auto">
+    <v-main class="main-content overflow-x-auto" v-dragscroll:nochilddrag="{ target: '.v-main__wrap' }">
       <router-view/>
     </v-main>
   </v-app>

@@ -39,16 +39,21 @@
         @start="dragStarted"
         @end="dragStopped"
         draggable=".list"
+        data-dragscroll
     >
       <v-col
           v-for="list in board.lists"
           :key="list.id"
           class="fill-height pa-0 ml-3 list"
           cols="auto"
+          data-dragscroll
       >
         <ListCard :list-id="list.id"></ListCard>
       </v-col>
-      <v-col class="pa-0 ml-3">
+      <v-col
+          class="pa-0 ml-3"
+          data-dragscroll
+      >
         <ListCreationButtons :board-id="boardId"/>
       </v-col>
     </draggable>

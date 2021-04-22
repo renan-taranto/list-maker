@@ -17,3 +17,7 @@
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none
 }
+
+.v-main__wrap {
+    overflow: auto;
+}
