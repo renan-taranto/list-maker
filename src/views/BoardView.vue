@@ -37,6 +37,8 @@
         chosen-class="lists--chosen"
         force-fallback="true"
         @start="dragStarted"
+        :scroll-sensitivity="250"
+        :scroll-speed="12"
         @end="dragStopped"
         draggable=".list"
         data-dragscroll
