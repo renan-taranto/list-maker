@@ -3,6 +3,7 @@
     <AppHeader/>
     <v-main class="main-content overflow-x-auto" v-dragscroll:nochilddrag="{ target: '.v-main__wrap' }">
       <AppLoadingProgress/>
+      <AppErrorDialog/>
       <router-view/>
     </v-main>
   </v-app>
@@ -11,12 +12,14 @@
 <script>
 import AppHeader from '@/components/layout/AppHeader'
 import AppLoadingProgress from '@/components/layout/AppLoadingProgress'
+import AppErrorDialog from '@/components/layout/AppErrorDialog'
 
 export default {
   name: 'AppLayout',
   components: {
     AppHeader,
-    AppLoadingProgress
+    AppLoadingProgress,
+    AppErrorDialog
   }
 }
 </script>

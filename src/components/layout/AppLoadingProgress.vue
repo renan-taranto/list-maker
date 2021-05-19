@@ -15,7 +15,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'AppLoadingProgress',
   computed: {
-    ...mapGetters('layout', ['loading'])
+    ...mapGetters('app', ['loading'])
   }
 }
 </script>
