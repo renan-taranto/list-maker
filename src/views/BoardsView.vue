@@ -57,7 +57,8 @@ import BoardCreationCard from '@/components/board/BoardCreationCard'
 import BoardCard from '@/components/board/BoardCard'
 import BoardsMenu from '@/components/board/BoardsMenu'
 import PageHeader from '@/components/layout/PageHeader'
-import { mapGetters } from 'vuex'
+import BoardsOverviewEventSource from '@/services/event-source/boards-overview'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'BoardsView',
@@ -69,11 +70,22 @@ export default {
   },
   data () {
     return {
-      isMenuVisible: false
+      isMenuVisible: false,
+      eventSource: null
     }
+  },
+  mounted () {
+    this.eventSource = BoardsOverviewEventSource.create()
+    this.loadBoardsOverview()
+  },
+  destroyed () {
+    this.eventSource.close()
   },
   computed: {
     ...mapGetters('boards', ['openBoards'])
+  },
+  methods: {
+    ...mapActions('boards', ['loadBoardsOverview'])
   }
 }
 </script>

@@ -1,21 +1,27 @@
 <template>
-  <a
-      href=""
-      class="text-decoration-none"
+  <v-card
+      height="80"
+      outlined
+      class="card"
+      :disabled="board.loading"
+      :to="`/board/${board.id}`"
   >
-    <v-card
-        height="80"
-        outlined
-        class="card"
-        :to="`/board/${board.id}`"
+    <div
+        v-if="board.loading"
+        class="d-flex justify-center align-center fill-height fill-width card__loading-overlay"
     >
-      <v-card-title class="ma-0 pa-2 d-flex justify-space-between">
+      <v-progress-circular
+          indeterminate
+          width="1"
+          color="primary"
+      />
+    </div>
+    <v-card-title class="ma-0 pa-2 d-flex justify-space-between">
           <span class="subtitle-1 font-weight-medium text-truncate card__title">
             {{ board.title }}
           </span>
-      </v-card-title>
-    </v-card>
-  </a>
+    </v-card-title>
+  </v-card>
 </template>
 
 <script>
@@ -45,5 +51,10 @@ export default {
 .card:hover .card__title {
   color: white;
   transition: color 200ms;
+}
+
+.card__loading-overlay {
+  position: absolute;
+  background: rgba(245, 245, 245, 0.50)
 }
 </style>

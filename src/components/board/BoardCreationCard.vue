@@ -22,7 +22,7 @@
         v-else
         height="80"
         outlined
-        v-click-outside="cancelAddingBoardHandler"
+        v-click-outside="cancelCreatingBoardHandler"
     >
       <div class="fill-height d-flex flex-column fill-width">
         <div class="d-flex flex-column">
@@ -35,8 +35,8 @@
               color="grey lighten-1"
               placeholder="Enter the board title..."
               class="pa-1"
-              @keyup.esc="cancelAddingBoardHandler"
-              @keyup.enter="addBoardHandler"
+              @keyup.esc="cancelCreatingBoardHandler"
+              @keyup.enter="createBoardHandler"
               v-model="boardTitle"
           />
           <div class="align-self-end mr-1">
@@ -44,7 +44,7 @@
                 icon
                 small
                 class="mr-2"
-                @click.stop="cancelAddingBoardHandler"
+                @click.stop="cancelCreatingBoardHandler"
             >
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -54,7 +54,7 @@
                 :disabled="isBoardTitleEmpty"
                 color="green darken-2"
                 class="white--text"
-                @click.stop="addBoardHandler"
+                @click.stop="createBoardHandler"
             >
               <v-icon small>mdi-plus</v-icon>
               Add
@@ -63,29 +63,18 @@
         </div>
       </div>
     </v-card>
-
-    <ErrorDialog
-        :show="isErrorDialogVisible"
-        :message="'An error has occurred while creating the board.'"
-        @dialogClose="isErrorDialogVisible = false"
-    />
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
-import ErrorDialog from '@/components/layout/ErrorDialog'
 
 export default {
   name: 'BoardCreationCard',
-  components: {
-    ErrorDialog
-  },
   data () {
     return {
       boardTitle: '',
-      isTextAreaVisible: false,
-      isErrorDialogVisible: false
+      isTextAreaVisible: false
     }
   },
   watch: {
@@ -96,23 +85,19 @@ export default {
     }
   },
   methods: {
-    async addBoardHandler () {
+    async createBoardHandler () {
       this.isTextAreaVisible = false
 
       if (this.isBoardTitleEmpty) {
         return
       }
 
-      try {
-        await this.add(this.boardTitle)
-      } catch (e) {
-        this.isErrorDialogVisible = true
-      }
+      await this.createBoard(this.boardTitle)
     },
-    cancelAddingBoardHandler () {
+    cancelCreatingBoardHandler () {
       this.isTextAreaVisible = false
     },
-    ...mapActions('boards', { add: 'addBoard' })
+    ...mapActions('boards', ['createBoard'])
   },
   computed: {
     isBoardTitleEmpty () {

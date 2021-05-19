@@ -41,11 +41,12 @@ export default {
   data () {
     return {
       boardTitle: this.board.title,
-      isTextFieldVisible: false
+      isTextFieldVisible: false,
+      updateTimeout: null
     }
   },
   methods: {
-    ...mapActions('boards', ['updateBoardTitle']),
+    ...mapActions('boards', ['changeBoardTitle']),
     hideTextField () {
       this.isTextFieldVisible = false
     }
@@ -57,7 +58,10 @@ export default {
         return
       }
 
-      this.updateBoardTitle({ boardId: this.board.id, newTitle: newVal })
+      clearTimeout(this.updateTimeout)
+      this.updateTimeout = setTimeout(() => {
+        this.changeBoardTitle({ boardId: this.board.id, newTitle: newVal })
+      }, 1000)
     }
   }
 }

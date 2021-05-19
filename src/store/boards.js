@@ -1,90 +1,37 @@
 import { v4 as uuidv4 } from 'uuid'
+import BoardService from '@/services/api/BoardService'
 
 const boards = {
   namespaced: true,
   state: () => ({
-    boards: [
-      {
-        id: '1',
-        title: 'Welcome!',
-        open: true,
-        lists: [
-          {
-            id: '0',
-            title: 'To Do',
-            items: [
-              { id: '0', title: 'Task A', description: 'A Description' },
-              { id: '1', title: 'Task D', description: 'D Description' },
-              { id: '2', title: 'Task G', description: 'G Description' }
-            ],
-            archivedItems: []
-          },
-          {
-            id: '1',
-            title: 'Doing',
-            items: [
-              { id: '3', title: 'Task B', description: 'B Description' },
-              { id: '4', title: 'Task C', description: 'C Description' },
-              { id: '5', title: 'Task F', description: 'F Description' }
-            ],
-            archivedItems: []
-          },
-          {
-            id: '2',
-            title: 'Testing',
-            items: [
-              { id: '6', title: 'Task K', description: 'K Description' },
-              { id: '7', title: 'Task L', description: 'L Description' },
-              { id: '8', title: 'Task M', description: 'M Description' }
-            ],
-            archivedItems: []
-          },
-          {
-            id: '3',
-            title: 'Waiting Deploy',
-            items: [
-              { id: '9', title: 'Task N', description: 'N Description' },
-              { id: '10', title: 'Task O', description: 'O Description' },
-              { id: '11', title: 'Task P', description: 'P Description' }
-            ],
-            archivedItems: []
-          },
-          {
-            id: '4',
-            title: 'Done',
-            items: [
-              { id: '12', title: 'Task H', description: 'H Description' },
-              { id: '13', title: 'Task I', description: 'I Description' },
-              { id: '14', title: 'Task J', description: 'A Description' }
-            ],
-            archivedItems: []
-          }
-        ],
-        archivedLists: []
-      },
-      { id: '2', title: 'Sprint 1', open: true, lists: [], archivedLists: [] },
-      { id: '3', title: 'Sprint 2', open: true, lists: [], archivedLists: [] },
-      { id: '4', title: 'Sprint 3', open: true, lists: [], archivedLists: [] },
-      { id: '5', title: 'Sprint 4', open: true, lists: [], archivedLists: [] },
-      { id: '6', title: 'Sprint 5', open: false, lists: [], archivedLists: [] }
-    ],
+    boards: [],
     selectedBoardId: null,
     selectedItemId: null
   }),
   mutations: {
+    SET_BOARDS (state, boards) {
+      state.boards = boards
+    },
+    SET_BOARD (state, board) {
+      const boardIndex = state.boards.findIndex(b => b.id === board.id)
+      state.boards.splice(boardIndex, 1, board)
+    },
     ADD_BOARD (state, board) {
       state.boards.push(board)
     },
-    CLOSE_BOARD (state, id) {
-      state.boards.find(b => b.id === id).open = false
+    FINISH_LOADING_BOARD (state, boardId) {
+      state.boards.find(b => b.id === boardId).loading = false
     },
-    REOPEN_BOARD (state, id) {
-      state.boards.find(b => b.id === id).open = true
+    CLOSE_BOARD (state, boardId) {
+      state.boards.find(b => b.id === boardId).open = false
+    },
+    REOPEN_BOARD (state, boardId) {
+      state.boards.find(b => b.id === boardId).open = true
     },
     SELECT_BOARD (state, boardId) {
       state.selectedBoardId = boardId
     },
-    UPDATE_BOARD_TITLE (state, { boardId, newTitle }) {
+    CHANGE_BOARD_TITLE (state, { boardId, newTitle }) {
       state.boards.find(b => b.id === boardId).title = newTitle
     },
     ADD_LIST (state, { boardId, list }) {
@@ -159,22 +106,36 @@ const boards = {
     }
   },
   actions: {
-    addBoard ({ commit }, title) {
-      commit('ADD_BOARD', { id: uuidv4(), title: title, open: true, lists: [], archivedLists: [] })
-      return Promise.resolve()
+    async loadBoardsOverview ({ commit }) {
+      const boards = await BoardService.getBoardsOverview()
+      commit('SET_BOARDS', boards)
     },
-    closeBoard ({ commit }, id) {
-      commit('CLOSE_BOARD', id)
-      return Promise.resolve()
+    async loadBoardOfId ({ commit }, boardId) {
+      const board = await BoardService.findById(boardId)
+      commit('SET_BOARD', board)
     },
-    reopenBoard ({ commit }, id) {
-      commit('REOPEN_BOARD', id)
+    async createBoard ({ commit }, title) {
+      const boardId = uuidv4()
+      await BoardService.create(boardId, title)
+      commit('ADD_BOARD', { id: boardId, title: title, open: true, lists: [], archivedLists: [], loading: true })
+    },
+    async finishLoadingBoard ({ commit }, boardId) {
+      commit('FINISH_LOADING_BOARD', boardId)
+    },
+    async closeBoard ({ commit }, boardId) {
+      await BoardService.close(boardId)
+      commit('CLOSE_BOARD', boardId)
+    },
+    async reopenBoard ({ commit }, boardId) {
+      await BoardService.reopen(boardId)
+      commit('REOPEN_BOARD', boardId)
+    },
+    async changeBoardTitle ({ commit }, { boardId, newTitle }) {
+      await BoardService.changeTitle(boardId, newTitle)
+      commit('CHANGE_BOARD_TITLE', { boardId, newTitle })
     },
     selectBoard ({ commit }, boardId) {
       commit('SELECT_BOARD', boardId)
-    },
-    updateBoardTitle ({ commit }, { boardId, newTitle }) {
-      commit('UPDATE_BOARD_TITLE', { boardId, newTitle })
     },
     addList ({ commit }, { boardId, listTitle }) {
       commit('ADD_LIST', { boardId: boardId, list: { id: uuidv4(), title: listTitle, items: [], archivedItems: [] } })
@@ -234,6 +195,7 @@ const boards = {
     },
     listOfId: (state) => (id) => {
       return state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+        .filter((l) => l != null)
         .find(list => list.id === id)
     },
     allListsFromBoard: (state, getters) => (boardId) => {
@@ -251,6 +213,10 @@ const boards = {
       return board.lists.indexOf(getters.listOfId(listId))
     },
     selectedItem: (state) => {
+      if (!state.selectedItemId) {
+        return null
+      }
+
       const item = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
         .reduce((items, list) => items.concat(list.items), [])
         .find(item => item.id === state.selectedItemId)

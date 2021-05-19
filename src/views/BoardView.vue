@@ -97,19 +97,16 @@ export default {
       isMenuVisible: false
     }
   },
-  mounted () {
+  async mounted () {
+    await this.loadBoardOfId(this.boardId)
     this.board = this.boardOfId(this.boardId)
-    if (typeof this.board !== 'object') {
-      this.$router.push({ name: 'NotFound' })
-    }
-
     this.selectBoard(this.boardId)
   },
   computed: {
     ...mapGetters('boards', ['boardOfId'])
   },
   methods: {
-    ...mapActions('boards', ['selectBoard']),
+    ...mapActions('boards', ['loadBoardOfId', 'selectBoard']),
     ...mapActions('draggable', ['dragStarted', 'dragStopped'])
   }
 }
