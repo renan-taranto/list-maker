@@ -1,10 +1,14 @@
 <template>
   <v-app>
-    <AppHeader/>
+    <AppHeader>
+      <template v-slot:subheader>
+        <router-view name="subheader"/>
+      </template>
+    </AppHeader>
     <v-main class="main-content overflow-x-auto" v-dragscroll:nochilddrag="{ target: '.v-main__wrap' }">
       <AppLoadingProgress/>
       <AppErrorDialog/>
-      <router-view/>
+      <router-view name="main"/>
     </v-main>
   </v-app>
 </template>

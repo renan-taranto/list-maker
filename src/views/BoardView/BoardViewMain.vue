@@ -3,29 +3,6 @@
       v-if="board"
       fluid
   >
-    <PageHeader>
-      <v-row :justify="'space-between'" :align="'start'">
-        <BoardTitle :board="board"/>
-        <v-btn
-            class="white--text mr-10"
-            text
-            small
-            outlined
-            color="grey darken-1"
-            @click="isMenuVisible = true"
-        >
-          <v-icon left>mdi-menu</v-icon>
-          Menu
-        </v-btn>
-      </v-row>
-    </PageHeader>
-
-    <BoardMenu
-        :is-menu-visible="isMenuVisible"
-        :board-id="boardId"
-        @menu-closed="isMenuVisible = false"
-    />
-
     <draggable
         :list="board.lists"
         group="lists"
@@ -66,21 +43,15 @@
 
 <script>
 import draggable from 'vuedraggable'
-import PageHeader from '@/components/layout/PageHeader'
-import BoardMenu from '@/components/board/BoardMenu'
-import BoardTitle from '@/components/board/BoardTitle'
 import ListCard from '@/components/list/ListCard'
 import ListCreationButtons from '@/components/list/ListCreationButtons'
 import ItemDialog from '@/components/item/ItemDialog'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
-  name: 'BoardView',
+  name: 'BoardViewMain',
   components: {
     draggable,
-    PageHeader,
-    BoardMenu,
-    BoardTitle,
     ListCard,
     ListCreationButtons,
     ItemDialog
@@ -93,8 +64,7 @@ export default {
   },
   data () {
     return {
-      board: null,
-      isMenuVisible: false
+      board: null
     }
   },
   async mounted () {

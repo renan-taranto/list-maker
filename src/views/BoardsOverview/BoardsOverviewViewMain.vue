@@ -1,27 +1,5 @@
 <template>
   <v-container fluid>
-    <PageHeader>
-      <v-row :justify="'space-between'" :align="'start'">
-        <div class="text-h6 ml-5">Boards</div>
-        <v-btn
-            class="white--text mr-10"
-            text
-            small
-            outlined
-            color="grey darken-1"
-            @click="isMenuVisible = true"
-        >
-          <v-icon left>mdi-menu</v-icon>
-          Menu
-        </v-btn>
-      </v-row>
-    </PageHeader>
-
-    <BoardsMenu
-        :is-menu-visible="isMenuVisible"
-        @menu-closed="isMenuVisible = false"
-    />
-
     <div
         v-if="openBoards.length === 0"
         class="text-caption pa-2"
@@ -55,22 +33,17 @@
 <script>
 import BoardCreationCard from '@/components/board/BoardCreationCard'
 import BoardCard from '@/components/board/BoardCard'
-import BoardsMenu from '@/components/board/BoardsMenu'
-import PageHeader from '@/components/layout/PageHeader'
 import BoardsOverviewEventSource from '@/services/event-source/boards-overview'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: 'BoardsView',
+  name: 'BoardsOverviewViewMain',
   components: {
     BoardCreationCard,
-    BoardCard,
-    BoardsMenu,
-    PageHeader
+    BoardCard
   },
   data () {
     return {
-      isMenuVisible: false,
       eventSource: null
     }
   },

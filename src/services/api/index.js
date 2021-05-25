@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '@/router'
 import store from '@/store'
 
 export default () => {
@@ -27,6 +28,11 @@ export default () => {
       store.dispatch('app/loadingEnded')
       store.dispatch('app/showError', 'An error has occurred. Please try again later.')
     }
+
+    if (error.response.status === 404) {
+      router.push({ name: 'NotFound' })
+    }
+
     return Promise.reject(error)
   })
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="title ml-5">
+  <div class="title ml-7">
     <span
       v-if="!isTextFieldVisible"
       class="title__span text-h6 text--unselectable"

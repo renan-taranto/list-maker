@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import BoardService from '@/services/api/BoardService'
+import ListService from '@/services/api/ListService'
 
 const boards = {
   namespaced: true,
@@ -137,9 +138,10 @@ const boards = {
     selectBoard ({ commit }, boardId) {
       commit('SELECT_BOARD', boardId)
     },
-    addList ({ commit }, { boardId, listTitle }) {
-      commit('ADD_LIST', { boardId: boardId, list: { id: uuidv4(), title: listTitle, items: [], archivedItems: [] } })
-      return Promise.resolve()
+    async createList ({ commit, getters }, { boardId, listTitle }) {
+      const listId = uuidv4()
+      await ListService.create(listId, listTitle, boardId, getters.boardListsCount(boardId))
+      commit('ADD_LIST', { boardId: boardId, list: { id: listId, title: listTitle, items: [], archivedItems: [] } })
     },
     archiveList ({ commit }, listId) {
       commit('ARCHIVE_LIST', listId)

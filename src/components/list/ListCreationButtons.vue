@@ -16,7 +16,7 @@
         v-else
         width="270"
         outlined
-        v-click-outside="cancelAddingListHandler"
+        v-click-outside="cancelCreatingListHandler"
     >
       <div class="d-flex flex-column">
         <v-text-field
@@ -28,8 +28,8 @@
             color="grey lighten-1"
             placeholder="Enter the list title..."
             class="pa-1"
-            @keyup.esc="cancelAddingListHandler"
-            @keyup.enter="addListHandler"
+            @keyup.esc="cancelCreatingListHandler"
+            @keyup.enter="createListHandler"
             v-model="listTitle"
         />
         <div class="align-self-end">
@@ -38,7 +38,7 @@
               icon
               small
               class="mr-2"
-              @click="cancelAddingListHandler"
+              @click="cancelCreatingListHandler"
           >
             <v-icon>mdi-close</v-icon>
           </v-btn>
@@ -48,7 +48,7 @@
               :disabled="isListTitleEmpty"
               color="green darken-2"
               class="white--text ma-1"
-              @click="addListHandler"
+              @click="createListHandler"
           >
             <v-icon small>mdi-plus</v-icon>
             Add
@@ -56,24 +56,14 @@
         </div>
       </div>
     </v-card>
-
-    <ErrorDialog
-        :show="isErrorDialogVisible"
-        :message="'An error has occurred while creating the list.'"
-        @dialogClose="isErrorDialogVisible = false"
-    />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import ErrorDialog from '@/components/layout/ErrorDialog'
 
 export default {
   name: 'ListCreationButton',
-  components: {
-    ErrorDialog
-  },
   props: {
     boardId: {
       type: String,
@@ -95,28 +85,24 @@ export default {
     },
     dragging (newValue) {
       if (newValue === true) {
-        this.cancelAddingListHandler()
+        this.cancelCreatingListHandler()
       }
     }
   },
   methods: {
-    async addListHandler () {
+    async createListHandler () {
       this.isTextAreaVisible = false
 
       if (this.isListTitleEmpty) {
         return
       }
 
-      try {
-        await this.addList({ boardId: this.boardId, listTitle: this.listTitle })
-      } catch (e) {
-        this.isErrorDialogVisible = true
-      }
+      await this.createList({ boardId: this.boardId, listTitle: this.listTitle })
     },
-    cancelAddingListHandler () {
+    cancelCreatingListHandler () {
       this.isTextAreaVisible = false
     },
-    ...mapActions('boards', ['addList'])
+    ...mapActions('boards', ['createList'])
   },
   computed: {
     isListTitleEmpty () {

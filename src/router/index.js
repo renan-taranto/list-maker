@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 const AppLayout = () => import('@/components/layout/AppLayout')
-const BoardsView = () => import('@/views/BoardsView')
-const BoardView = () => import('@/views/BoardView')
+const BoardsOverviewViewHeader = () => import('@/views/BoardsOverview/BoardsOverviewViewHeader')
+const BoardsOverviewViewMain = () => import('@/views/BoardsOverview/BoardsOverviewViewMain')
+const BoardViewHeader = () => import('@/views/BoardView/BoardViewHeader')
+const BoardViewMain = () => import('@/views/BoardView/BoardViewMain')
 const NotFoundView = () => import('@/views/NotFoundView')
 
 Vue.use(VueRouter)
@@ -19,18 +21,30 @@ const routes = [
       {
         path: '/boards',
         name: 'BoardsView',
-        component: BoardsView
+        components: {
+          subheader: BoardsOverviewViewHeader,
+          main: BoardsOverviewViewMain
+        }
       },
       {
         path: '/board/:boardId',
         name: 'BoardView',
-        component: BoardView,
-        props: true
+        components: {
+          subheader: BoardViewHeader,
+          main: BoardViewMain
+        },
+        props: {
+          subheader: (route) => ({ boardId: route.params.boardId }),
+          main: (route) => ({ boardId: route.params.boardId })
+        }
       },
       {
-        path: '*',
+        path: '/404',
+        alias: '*',
         name: 'NotFound',
-        component: NotFoundView
+        components: {
+          main: NotFoundView
+        }
       }
     ]
   }

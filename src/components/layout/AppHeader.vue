@@ -71,6 +71,9 @@
         />
         <span class="header__title header__title--xs">ListMaker</span>
       </v-btn>
+      <template v-slot:extension>
+        <slot name="subheader"></slot>
+      </template>
     </v-app-bar>
 
     <v-app-bar
@@ -113,6 +116,9 @@
           </v-col>
         </v-row>
       </v-container>
+      <template v-slot:extension>
+        <slot name="subheader"></slot>
+      </template>
     </v-app-bar>
   </div>
 </template>

@@ -1,5 +1,6 @@
 <template>
   <v-navigation-drawer
+      app
       v-model="isDrawerVisible"
       temporary
       fixed
