@@ -33,7 +33,7 @@
 <script>
 import BoardCreationCard from '@/components/board/BoardCreationCard'
 import BoardCard from '@/components/board/BoardCard'
-import BoardsOverviewEventSource from '@/services/event-source/boards-overview'
+import BoardsEventSource from '@/services/event-source/boards'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -44,15 +44,15 @@ export default {
   },
   data () {
     return {
-      eventSource: null
+      boardsEventSource: null
     }
   },
   mounted () {
-    this.eventSource = BoardsOverviewEventSource.create()
+    this.boardsEventSource = BoardsEventSource.create()
     this.loadBoardsOverview()
   },
   destroyed () {
-    this.eventSource.close()
+    this.boardsEventSource.close()
   },
   computed: {
     ...mapGetters('boards', ['openBoards'])
