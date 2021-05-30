@@ -1,10 +1,10 @@
 <template>
   <v-row
-      v-if="board"
+      v-if="selectedBoard"
       :justify="'space-between'"
       :align="'start'"
   >
-    <BoardTitle :board="board"/>
+    <BoardTitle/>
     <v-btn
         class="white--text mr-7"
         text
@@ -19,7 +19,7 @@
 
     <BoardMenu
         :is-menu-visible="isMenuVisible"
-        :board-id="boardId"
+        :board-id="selectedBoard.id"
         @menu-closed="isMenuVisible = false"
     />
   </v-row>
@@ -36,22 +36,13 @@ export default {
     BoardMenu,
     BoardTitle
   },
-  props: {
-    boardId: {
-      type: String,
-      required: true
-    }
-  },
   data () {
     return {
       isMenuVisible: false
     }
   },
   computed: {
-    ...mapGetters('boards', ['boardOfId']),
-    board () {
-      return this.boardOfId(this.boardId)
-    }
+    ...mapGetters('boards', ['selectedBoard'])
   }
 }
 </script>

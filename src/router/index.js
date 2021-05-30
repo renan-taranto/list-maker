@@ -34,7 +34,6 @@ const routes = [
           main: BoardViewMain
         },
         props: {
-          subheader: (route) => ({ boardId: route.params.boardId }),
           main: (route) => ({ boardId: route.params.boardId })
         }
       },
