@@ -1,10 +1,10 @@
 <template>
   <v-container
-      v-if="board"
+      v-if="selectedBoard"
       fluid
   >
     <draggable
-        :list="board.lists"
+        :list="selectedBoard.lists"
         group="lists"
         filter=".item-creation"
         :prevent-on-filter="false"
@@ -14,14 +14,15 @@
         chosen-class="lists--chosen"
         force-fallback="true"
         @start="dragStarted"
+        @end="dragStopped"
+        @change="changeHandler"
         :scroll-sensitivity="250"
         :scroll-speed="12"
-        @end="dragStopped"
         draggable=".list"
         data-dragscroll
     >
       <v-col
-          v-for="list in board.lists"
+          v-for="list in selectedBoard.lists"
           :key="list.id"
           class="fill-height pa-0 ml-3 list"
           cols="auto"
@@ -42,6 +43,8 @@
 </template>
 
 <script>
+import BoardsEventSource from '@/services/event-source/boards'
+import ListsEventSource from '@/services/event-source/lists'
 import draggable from 'vuedraggable'
 import ListCard from '@/components/list/ListCard'
 import ListCreationButtons from '@/components/list/ListCreationButtons'
@@ -64,20 +67,37 @@ export default {
   },
   data () {
     return {
-      board: null
+      eventSources: []
     }
   },
   async mounted () {
+    this.eventSources.push(
+      BoardsEventSource.create(),
+      ListsEventSource.create()
+    )
+
+    await this.loadBoardsOverview()
     await this.loadBoardOfId(this.boardId)
-    this.board = this.boardOfId(this.boardId)
     this.selectBoard(this.boardId)
   },
+  destroyed () {
+    this.eventSources.forEach(e => e.close())
+  },
   computed: {
-    ...mapGetters('boards', ['boardOfId'])
+    ...mapGetters('boards', ['boardOfId', 'selectedBoard'])
   },
   methods: {
-    ...mapActions('boards', ['loadBoardOfId', 'selectBoard']),
-    ...mapActions('draggable', ['dragStarted', 'dragStopped'])
+    ...mapActions('boards', ['loadBoardsOverview', 'loadBoardOfId', 'selectBoard', 'moveList']),
+    ...mapActions('draggable', ['dragStarted', 'dragStopped']),
+    changeHandler (e) {
+      if (Object.prototype.hasOwnProperty.call(e, 'moved')) {
+        this.moveList({
+          listId: e.moved.element.id,
+          targetBoardId: this.boardId,
+          targetIndex: e.moved.newIndex
+        })
+      }
+    }
   }
 }
 </script>

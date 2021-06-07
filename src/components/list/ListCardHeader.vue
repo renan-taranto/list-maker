@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex justify-space-between">
-    <ListCardHeaderTitle :list="list"/>
+    <ListCardHeaderTitle :list-id="list.id"/>
     <ListCardHeaderMenu :list-id="list.id"/>
   </div>
 </template>

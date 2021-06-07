@@ -8,5 +8,20 @@ export default {
       boardId,
       position
     })
+  },
+  move (id, toBoardId, toPosition) {
+    return Api().post(`/lists/${id}/move`, {
+      toBoardId,
+      toPosition
+    })
+  },
+  archive (id) {
+    return Api().post(`/lists/${id}/archive`)
+  },
+  restore (id) {
+    return Api().post(`/lists/${id}/restore`)
+  },
+  changeTitle (id, title) {
+    return Api().post(`/lists/${id}/change-title`, { title })
   }
 }

@@ -97,7 +97,7 @@ export default {
         return
       }
 
-      await this.createList({ boardId: this.boardId, listTitle: this.listTitle })
+      this.createList({ boardId: this.boardId, listTitle: this.listTitle })
     },
     cancelCreatingListHandler () {
       this.isTextAreaVisible = false

@@ -13,6 +13,7 @@
         v-model="targetBoard"
         :items="openBoards"
         item-text="title"
+        @change="changeTargetBoardHandler"
         return-object
     />
     <v-select
@@ -51,15 +52,33 @@ export default {
   data () {
     return {
       targetBoard: null,
+      availablePositions: null,
       targetPosition: null
     }
   },
   beforeMount () {
     this.targetBoard = this.selectedBoard
+    this.updateAvailablePositions()
+    this.setDefaultTargetPosition()
   },
   computed: {
-    ...mapGetters('boards', ['selectedBoard', 'openBoards', 'boardListsCount', 'listIndexByListId']),
-    availablePositions () {
+    ...mapGetters('boards', [
+      'selectedBoard',
+      'openBoards',
+      'boardOfId',
+      'boardListsCount',
+      'listIndexByListId'
+    ])
+  },
+  methods: {
+    ...mapActions('boards', ['loadBoardOfId', 'moveList']),
+    async changeTargetBoardHandler (board) {
+      await this.loadBoardOfId(board.id)
+      this.targetBoard = this.boardOfId(board.id)
+      this.updateAvailablePositions()
+      this.setDefaultTargetPosition()
+    },
+    updateAvailablePositions () {
       const positions = []
       for (let i = 1; i <= this.boardListsCount(this.targetBoard.id); i++) {
         positions.push(i)
@@ -69,11 +88,8 @@ export default {
         positions.push(positions.length + 1)
       }
 
-      return positions
-    }
-  },
-  methods: {
-    ...mapActions('boards', ['moveList']),
+      this.availablePositions = positions
+    },
     setDefaultTargetPosition () {
       if (this.targetBoard === null) {
         this.targetPosition = null
@@ -85,11 +101,6 @@ export default {
     move () {
       this.moveList({ listId: this.listId, targetBoardId: this.targetBoard.id, targetIndex: this.targetPosition - 1 })
       this.$emit('list-moved')
-    }
-  },
-  watch: {
-    targetBoard () {
-      this.setDefaultTargetPosition()
     }
   }
 }

@@ -7,7 +7,7 @@
         class="list__title text--unselectable"
         v-if="!isTextFieldVisible"
     >
-      {{ listTitle }}
+      {{ title }}
     </span>
     <v-text-field
         v-else
@@ -16,13 +16,13 @@
         dense
         single-line
         hide-details
-        v-model="listTitle"
+        v-model="title"
         background-color="grey lighten-4"
         color="grey lighten-1"
         @focus="$event.target.select()"
-        @keyup.esc="hideTextField"
-        @keyup.enter="hideTextField"
-        v-click-outside="hideTextField"
+        @keyup.enter="updateTitle"
+        @keyup.esc="cancel"
+        v-click-outside="cancel"
     />
   </v-card-title>
 </template>
@@ -35,26 +35,33 @@ export default {
   name: 'ListCardHeaderTitle',
   mixins: [stringMixin],
   props: {
-    list: {
-      type: Object,
+    listId: {
+      type: String,
       required: true
     }
   },
   data () {
     return {
-      listTitle: this.list.title,
-      isTextFieldVisible: false
+      isTextFieldVisible: false,
+      tempTitle: null
+    }
+  },
+  mounted () {
+    this.tempTitle = this.title
+  },
+  computed: {
+    ...mapGetters('draggable', ['dragging']),
+    ...mapGetters('boards', ['listOfId']),
+    title: {
+      set (value) {
+        this.tempTitle = value
+      },
+      get () {
+        return this.listOfId(this.listId).title
+      }
     }
   },
   watch: {
-    listTitle (newVal, oldVal) {
-      if (this.isEmptyString(newVal)) {
-        this.listTitle = oldVal
-        return
-      }
-
-      this.updateListTitle({ listId: this.list.id, newTitle: newVal })
-    },
     dragging (newValue) {
       if (newValue === true) {
         this.hideTextField()
@@ -62,13 +69,23 @@ export default {
     }
   },
   methods: {
+    ...mapActions('boards', ['updateListTitle']),
+    updateTitle () {
+      if (this.isEmptyString(this.tempTitle)) {
+        this.cancel()
+        return
+      }
+
+      this.updateListTitle({ listId: this.listId, newTitle: this.tempTitle })
+      this.hideTextField()
+    },
+    cancel () {
+      this.tempTitle = this.title
+      this.hideTextField()
+    },
     hideTextField () {
       this.isTextFieldVisible = false
-    },
-    ...mapActions('boards', ['updateListTitle'])
-  },
-  computed: {
-    ...mapGetters('draggable', ['dragging'])
+    }
   }
 }
 </script>

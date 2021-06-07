@@ -35,21 +35,27 @@ const boards = {
     CHANGE_BOARD_TITLE (state, { boardId, newTitle }) {
       state.boards.find(b => b.id === boardId).title = newTitle
     },
-    ADD_LIST (state, { boardId, list }) {
-      state.boards.find(b => b.id === boardId).lists.push(list)
+    ADD_LIST (state, { id, title, boardId }) {
+      state.boards.find(b => b.id === boardId).lists.push(
+        { id: id, title: title, items: [], archivedItems: [] }
+      )
     },
     ARCHIVE_LIST (state, listId) {
-      const board = state.boards.find(b => b.lists.find(l => l.id === listId))
-      const listIndex = board.lists.findIndex(list => list.id === listId)
-      board.archivedLists.push(board.lists.splice(listIndex, 1)[0])
+      const board = state.boards.find(b => b.lists && b.lists.find(l => l.id === listId))
+      if (board) {
+        const listIndex = board.lists.findIndex(list => list.id === listId)
+        board.archivedLists.push(board.lists.splice(listIndex, 1)[0])
+      }
     },
     RESTORE_LIST (state, listId) {
-      const board = state.boards.find(b => b.archivedLists.find(l => l.id === listId))
-      const listIndex = board.archivedLists.findIndex(list => list.id === listId)
-      board.lists.push(board.archivedLists.splice(listIndex, 1)[0])
+      const board = state.boards.find(b => b.archivedLists && b.archivedLists.find(l => l.id === listId))
+      if (board) {
+        const listIndex = board.archivedLists.findIndex(list => list.id === listId)
+        board.lists.push(board.archivedLists.splice(listIndex, 1)[0])
+      }
     },
     MOVE_LIST (state, { listId, targetBoardId, targetIndex }) {
-      const currentListBoard = state.boards.find(b => b.lists.find(l => l.id === listId))
+      const currentListBoard = state.boards.find(b => b.lists && b.lists.find(l => l.id === listId))
       const currentListIndex = currentListBoard.lists.findIndex(list => list.id === listId)
       const list = currentListBoard.lists.splice(currentListIndex, 1)[0]
 
@@ -57,6 +63,7 @@ const boards = {
     },
     UPDATE_LIST_TITLE (state, { listId, newTitle }) {
       const list = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+        .filter((list) => list != null)
         .find(list => list.id === listId)
       list.title = newTitle
     },
@@ -131,30 +138,33 @@ const boards = {
       await BoardService.reopen(boardId)
       commit('REOPEN_BOARD', boardId)
     },
-    async changeBoardTitle ({ commit }, { boardId, newTitle }) {
-      await BoardService.changeTitle(boardId, newTitle)
+    changeBoardTitle ({ commit }, { boardId, newTitle }) {
       commit('CHANGE_BOARD_TITLE', { boardId, newTitle })
+      BoardService.changeTitle(boardId, newTitle)
     },
     selectBoard ({ commit }, boardId) {
       commit('SELECT_BOARD', boardId)
     },
-    async createList ({ commit, getters }, { boardId, listTitle }) {
+    createList ({ commit, getters }, { boardId, listTitle }) {
       const listId = uuidv4()
-      await ListService.create(listId, listTitle, boardId, getters.boardListsCount(boardId))
-      commit('ADD_LIST', { boardId: boardId, list: { id: listId, title: listTitle, items: [], archivedItems: [] } })
+      commit('ADD_LIST', { id: listId, title: listTitle, boardId: boardId })
+      ListService.create(listId, listTitle, boardId, getters.boardListsCount(boardId) - 1)
     },
     archiveList ({ commit }, listId) {
       commit('ARCHIVE_LIST', listId)
+      ListService.archive(listId)
     },
     restoreList ({ commit }, listId) {
       commit('RESTORE_LIST', listId)
+      ListService.restore(listId)
     },
     moveList ({ commit }, { listId, targetBoardId, targetIndex }) {
       commit('MOVE_LIST', { listId, targetBoardId, targetIndex })
+      ListService.move(listId, targetBoardId, targetIndex)
     },
     updateListTitle ({ commit }, { listId, newTitle }) {
       commit('UPDATE_LIST_TITLE', { listId, newTitle })
-      return Promise.resolve()
+      ListService.changeTitle(listId, newTitle)
     },
     addItem ({ commit }, payload) {
       commit('ADD_ITEM', { listId: payload.listId, item: { id: uuidv4(), title: payload.itemTitle, description: null } })
@@ -200,6 +210,11 @@ const boards = {
         .filter((l) => l != null)
         .find(list => list.id === id)
     },
+    archivedListOfId: (state) => (id) => {
+      return state.boards.reduce((archivedLists, board) => archivedLists.concat(board.archivedLists), [])
+        .filter((l) => l != null)
+        .find(archivedList => archivedList.id === id)
+    },
     allListsFromBoard: (state, getters) => (boardId) => {
       const board = getters.boardOfId(boardId)
       return [...board.lists, ...board.archivedLists]
@@ -211,7 +226,7 @@ const boards = {
       return getters.boardOfId(boardId).archivedLists
     },
     listIndexByListId: (state, getters) => (listId) => {
-      const board = state.boards.find(b => b.lists.find(l => l.id === listId))
+      const board = state.boards.find(b => b.lists && b.lists.find(l => l.id === listId))
       return board.lists.indexOf(getters.listOfId(listId))
     },
     selectedItem: (state) => {
