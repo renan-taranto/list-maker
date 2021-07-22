@@ -15,6 +15,7 @@
         autofocus
         outlined
         dense
+        full-width
         single-line
         hide-details
         v-model="itemTitle"
@@ -72,7 +73,7 @@ export default {
 
 <style scoped>
 .title {
-  max-width: 100%;
+  width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -80,5 +81,9 @@ export default {
 
 .title__span {
   cursor: pointer;
+}
+
+.v-input {
+  font-size: 1.1em;
 }
 </style>
