@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 import BoardService from '@/services/api/BoardService'
 import ListService from '@/services/api/ListService'
+import ItemService from '@/services/api/ItemService'
 
 const boards = {
   namespaced: true,
@@ -36,9 +37,12 @@ const boards = {
       state.boards.find(b => b.id === boardId).title = newTitle
     },
     ADD_LIST (state, { id, title, boardId }) {
-      state.boards.find(b => b.id === boardId).lists.push(
-        { id: id, title: title, items: [], archivedItems: [] }
-      )
+      const board = state.boards.find(b => b.id === boardId)
+      if (board.lists) {
+        board.lists.push(
+          { id: id, title: title, items: [], archivedItems: [] }
+        )
+      }
     },
     ARCHIVE_LIST (state, listId) {
       const board = state.boards.find(b => b.lists && b.lists.find(l => l.id === listId))
@@ -67,16 +71,21 @@ const boards = {
         .find(list => list.id === listId)
       list.title = newTitle
     },
-    ADD_ITEM (state, { listId, item }) {
+    ADD_ITEM (state, { listId, item, index }) {
       const list = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
-        .find(list => list.id === listId)
-      list.items.push(item)
+        .find(list => list && list.id === listId)
+      if (!list || list.items.find(i => i.id === item.id)) {
+        return
+      }
+
+      list.items.splice(index || list.items.length, 0, item)
     },
     SELECT_ITEM (state, itemId) {
       state.selectedItemId = itemId
     },
     UPDATE_ITEM_TITLE (state, { itemId, newTitle }) {
       const item = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+        .filter((list) => list != null)
         .reduce((items, list) => items.concat(list.items), [])
         .find(i => i.id === itemId)
       if (item) {
@@ -85,6 +94,7 @@ const boards = {
     },
     UPDATE_ITEM_DESCRIPTION (state, { itemId, newDescription }) {
       const item = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+        .filter((list) => list != null)
         .reduce((items, list) => items.concat(list.items), [])
         .find(item => item.id === itemId)
       if (item) {
@@ -93,24 +103,49 @@ const boards = {
     },
     ARCHIVE_ITEM (state, itemId) {
       const list = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
-        .find(l => l.items.find(item => item.id === itemId))
-      const itemIndex = list.items.findIndex(item => item.id === itemId)
-      list.archivedItems.push(list.items.splice(itemIndex, 1)[0])
+        .filter((list) => list != null)
+        .find(list => list.items.find(item => item.id === itemId))
+
+      if (list) {
+        const itemIndex = list.items.findIndex(item => item.id === itemId)
+        list.archivedItems.push(list.items.splice(itemIndex, 1)[0])
+      }
     },
     RESTORE_ITEM (state, itemId) {
-      const list = state.boards.reduce((lists, board) => lists.concat([...board.lists, ...board.archivedLists]), [])
-        .find(l => l.archivedItems.find(item => item.id === itemId))
-      const itemIndex = list.archivedItems.findIndex(item => item.id === itemId)
-      list.items.push(list.archivedItems.splice(itemIndex, 1)[0])
+      const allLists = state.boards.reduce((lists, board) => {
+        if (board.lists) {
+          lists = lists.concat(board.lists)
+        }
+        if (board.archivedLists) {
+          lists = lists.concat(board.archivedLists)
+        }
+
+        return lists
+      }, [])
+      const list = allLists.find(l => l.archivedItems && l.archivedItems.find(item => item.id === itemId))
+
+      if (list) {
+        const itemIndex = list.archivedItems.findIndex(item => item.id === itemId)
+        list.items.push(list.archivedItems.splice(itemIndex, 1)[0])
+      }
     },
     MOVE_ITEM (state, { itemId, targetListId, targetIndex }) {
       const currentList = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+        .filter((list) => list != null)
         .find(list => list.items.find(item => item.id === itemId))
       const currentItemIndex = currentList.items.findIndex(item => item.id === itemId)
       const targetList = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+        .filter(list => list != null)
         .find(list => list.id === targetListId)
 
-      targetList.items.splice(targetIndex, 0, currentList.items.splice(currentItemIndex, 1)[0])
+      if (currentList.id !== targetListId || currentItemIndex !== targetIndex) {
+        targetList.items.splice(targetIndex, 0, currentList.items.splice(currentItemIndex, 1)[0])
+      }
+    },
+    REMOVE_ITEM (state, { boardId, itemId }) {
+      const board = state.boards.find(b => b.id === boardId)
+      const list = board.lists.find(l => l.items.find(i => i.id === itemId))
+      list.items.splice(list.items.findIndex(i => i.id === itemId), 1)
     }
   },
   actions: {
@@ -166,27 +201,33 @@ const boards = {
       commit('UPDATE_LIST_TITLE', { listId, newTitle })
       ListService.changeTitle(listId, newTitle)
     },
-    addItem ({ commit }, payload) {
-      commit('ADD_ITEM', { listId: payload.listId, item: { id: uuidv4(), title: payload.itemTitle, description: null } })
-      return Promise.resolve()
+    addItem ({ commit, getters }, payload) {
+      const itemId = uuidv4()
+      commit('ADD_ITEM', { listId: payload.listId, item: { id: itemId, title: payload.itemTitle, description: null } })
+      ItemService.add(itemId, payload.itemTitle, getters.listItemsCount(payload.listId) - 1, payload.listId)
     },
     selectItem ({ commit }, itemId) {
       commit('SELECT_ITEM', itemId)
     },
     updateItemTitle ({ commit }, { itemId, newTitle }) {
       commit('UPDATE_ITEM_TITLE', { itemId, newTitle })
+      ItemService.changeTitle(itemId, newTitle)
     },
     updateItemDescription ({ commit }, { itemId, newDescription }) {
       commit('UPDATE_ITEM_DESCRIPTION', { itemId, newDescription })
+      ItemService.changeDescription(itemId, newDescription)
     },
     archiveItem ({ commit }, itemId) {
       commit('ARCHIVE_ITEM', itemId)
+      ItemService.archive(itemId)
     },
     restoreItem ({ commit }, itemId) {
       commit('RESTORE_ITEM', itemId)
+      ItemService.restore(itemId)
     },
     moveItem ({ commit }, { itemId, targetListId, targetIndex }) {
       commit('MOVE_ITEM', { itemId, targetListId, targetIndex })
+      ItemService.move(itemId, targetIndex, targetListId)
     }
   },
   getters: {
@@ -235,12 +276,19 @@ const boards = {
       }
 
       const item = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+        .filter((list) => list != null)
         .reduce((items, list) => items.concat(list.items), [])
         .find(item => item.id === state.selectedItemId)
       return item || null
     },
     archivedBoardItems: (state, getters) => (boardId) => {
       return getters.allListsFromBoard(boardId).reduce((archivedItems, list) => archivedItems.concat(list.archivedItems), [])
+    },
+    openItemsFromBoard: (state, getters) => (boardId) => {
+      return getters.openListsFromBoard(boardId).reduce((items, list) => items.concat(list.items), [])
+    },
+    selectedBoardHasItem: (state, getters) => (itemId) => {
+      return getters.openItemsFromBoard(state.selectedBoardId).find(item => item.id === itemId) !== undefined
     },
     listItemsCount: (state, getters) => (listId) => {
       return getters.listOfId(listId).items.length
@@ -251,6 +299,7 @@ const boards = {
       }
 
       return getters.openBoards.reduce((lists, board) => lists.concat(board.lists), [])
+        .filter((list) => list != null)
         .find(list => list.items.find(item => item.id === state.selectedItemId))
     },
     selectedItemIndex: (state, getters) => {

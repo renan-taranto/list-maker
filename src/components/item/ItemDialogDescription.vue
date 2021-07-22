@@ -86,15 +86,24 @@ export default {
       this.isTextAreaVisible = false
     },
     save () {
-      if (this.itemDescription !== null && this.isEmptyString(this.itemDescription)) {
-        this.itemDescription = null
+      this.isTextAreaVisible = false
+
+      if (!this.itemDescription || this.isEmptyString(this.itemDescription)) {
+        this.itemDescription = this.item.description
+        return
       }
 
-      this.updateItemDescription({ itemId: this.item.id, newDescription: this.itemDescription })
-      this.isTextAreaVisible = false
+      if (this.item.description !== this.itemDescription) {
+        this.updateItemDescription({ itemId: this.item.id, newDescription: this.itemDescription })
+      }
     },
     includeOnClickOutside () {
       return [document.querySelector('.cancel')]
+    }
+  },
+  watch: {
+    'item.description' (val) {
+      this.itemDescription = val
     }
   }
 }

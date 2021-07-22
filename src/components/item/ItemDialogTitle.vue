@@ -52,12 +52,19 @@ export default {
     save () {
       this.isTextFieldVisible = false
 
-      if (this.isEmptyString(this.itemTitle)) {
+      if (!this.itemTitle || this.isEmptyString(this.itemTitle)) {
         this.itemTitle = this.item.title
         return
       }
 
-      this.updateItemTitle({ itemId: this.item.id, newTitle: this.itemTitle })
+      if (this.item.title !== this.itemTitle) {
+        this.updateItemTitle({ itemId: this.item.id, newTitle: this.itemTitle })
+      }
+    }
+  },
+  watch: {
+    'item.title' (val) {
+      this.itemTitle = val
     }
   }
 }

@@ -111,6 +111,7 @@ export default {
     ...mapGetters('boards', [
       'selectedBoard',
       'openBoards',
+      'boardOfId',
       'openListsFromBoard',
       'listItemsCount',
       'selectedItem',
@@ -141,7 +142,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('boards', ['moveItem']),
+    ...mapActions('boards', ['moveItem', 'loadBoardOfId']),
     move () {
       if (!this.targetList || !this.targetPosition) {
         return
@@ -161,14 +162,15 @@ export default {
     }
   },
   watch: {
-    targetBoard (newVal) {
+    async targetBoard (newVal) {
       if (newVal.id === this.selectedBoard.id) {
         this.targetList = this.selectedItemList
         this.targetPosition = this.selectedItemIndex + 1
         return
       }
 
-      this.targetList = newVal.lists[0]
+      await this.loadBoardOfId(newVal.id)
+      this.targetList = this.boardOfId(newVal.id).lists[0]
       this.targetPosition = 1
     },
     targetList (newVal) {

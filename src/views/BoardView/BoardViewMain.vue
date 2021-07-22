@@ -45,6 +45,7 @@
 <script>
 import BoardsEventSource from '@/services/event-source/boards'
 import ListsEventSource from '@/services/event-source/lists'
+import ItemsEventSource from '@/services/event-source/items'
 import draggable from 'vuedraggable'
 import ListCard from '@/components/list/ListCard'
 import ListCreationButtons from '@/components/list/ListCreationButtons'
@@ -73,7 +74,8 @@ export default {
   async mounted () {
     this.eventSources.push(
       BoardsEventSource.create(),
-      ListsEventSource.create()
+      ListsEventSource.create(),
+      ItemsEventSource.create()
     )
 
     await this.loadBoardsOverview()

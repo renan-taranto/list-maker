@@ -13,7 +13,10 @@
         :empty-insert-threshold="50"
         :animation="150"
         @start="dragStarted"
-        @end="dragStopped"
+        :move="movingStarted"
+        @end="endHandler"
+        @change="changeHandler"
+        :list-id="list.id"
         force-fallback="true"
     >
       <v-list-item
@@ -57,11 +60,29 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('draggable', ['dragging'])
+    ...mapGetters('draggable', ['dragging', 'targetListId', 'movingItemId'])
   },
   methods: {
-    ...mapActions('draggable', ['dragStarted', 'dragStopped']),
-    ...mapActions('boards', ['selectItem'])
+    ...mapActions('draggable', ['dragStarted', 'dragStopped', 'setTargetListId', 'setMovingItemId']),
+    ...mapActions('boards', ['selectItem', 'moveItem']),
+    changeHandler (e) {
+      if (!Object.prototype.hasOwnProperty.call(e, 'added') && !Object.prototype.hasOwnProperty.call(e, 'moved')) {
+        return
+      }
+
+      this.moveItem({
+        itemId: this.movingItemId,
+        targetListId: this.targetListId,
+        targetIndex: e[Object.keys(e)[0]].newIndex
+      })
+    },
+    movingStarted (e) {
+      this.setTargetListId(e.relatedContext.component.$attrs['list-id'])
+      this.setMovingItemId(e.draggedContext.element.id)
+    },
+    endHandler () {
+      this.dragStopped()
+    }
   }
 }
 </script>
