@@ -9,10 +9,10 @@ export default {
       position
     })
   },
-  move (id, toBoardId, toPosition) {
+  move (id, boardId, position) {
     return Api().post(`/lists/${id}/move`, {
-      toBoardId,
-      toPosition
+      boardId,
+      position
     })
   },
   archive (id) {

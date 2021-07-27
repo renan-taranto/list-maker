@@ -36,10 +36,15 @@ const boards = {
     CHANGE_BOARD_TITLE (state, { boardId, newTitle }) {
       state.boards.find(b => b.id === boardId).title = newTitle
     },
-    ADD_LIST (state, { id, title, boardId }) {
+    ADD_LIST (state, { id, title, boardId, index }) {
       const board = state.boards.find(b => b.id === boardId)
-      if (board.lists) {
-        board.lists.push(
+      if (
+        board.lists &&
+        board.lists.find(l => l.id === id) === undefined
+      ) {
+        board.lists.splice(
+          index ?? board.lists.length,
+          0,
           { id: id, title: title, items: [], archivedItems: [] }
         )
       }
@@ -60,10 +65,20 @@ const boards = {
     },
     MOVE_LIST (state, { listId, targetBoardId, targetIndex }) {
       const currentListBoard = state.boards.find(b => b.lists && b.lists.find(l => l.id === listId))
-      const currentListIndex = currentListBoard.lists.findIndex(list => list.id === listId)
-      const list = currentListBoard.lists.splice(currentListIndex, 1)[0]
+      if (!currentListBoard) {
+        return
+      }
 
-      state.boards.find(b => b.id === targetBoardId).lists.splice(targetIndex, 0, list)
+      const currentListIndex = currentListBoard.lists.findIndex(list => list.id === listId)
+      if (currentListIndex < 0) {
+        return
+      }
+
+      const list = currentListBoard.lists.splice(currentListIndex, 1)[0]
+      const targetBoard = state.boards.find(b => b.id === targetBoardId)
+      if (targetBoard && targetBoard.lists) {
+        targetBoard.lists.splice(targetIndex, 0, list)
+      }
     },
     UPDATE_LIST_TITLE (state, { listId, newTitle }) {
       const list = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
@@ -78,7 +93,16 @@ const boards = {
         return
       }
 
-      list.items.splice(index || list.items.length, 0, item)
+      list.items.splice(index ?? list.items.length, 0, item)
+    },
+    ADD_ARCHIVED_ITEM_TO_OPEN_LIST (state, { listId, item, index }) {
+      const list = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
+        .find(list => list && list.id === listId)
+      if (!list || list.archivedItems.find(i => i.id === item.id)) {
+        return
+      }
+
+      list.archivedItems.splice(index ?? list.archivedItems.length, 0, item)
     },
     SELECT_ITEM (state, itemId) {
       state.selectedItemId = itemId
