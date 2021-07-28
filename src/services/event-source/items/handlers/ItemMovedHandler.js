@@ -11,6 +11,12 @@ const selectedBoardContainsList = (listId) => {
 export default {
   eventType: 'item-moved',
   handle (eventPayload) {
+    store.commit('boards/MOVE_ITEM', {
+      itemId: eventPayload.id,
+      targetListId: eventPayload.listId,
+      targetIndex: eventPayload.position
+    })
+
     if (!selectedBoardContainsItem(eventPayload.id) && selectedBoardContainsList(eventPayload.listId)) {
       store.commit('boards/ADD_ITEM', {
         listId: eventPayload.listId,
@@ -20,25 +26,6 @@ export default {
           description: eventPayload.description
         },
         index: eventPayload.position
-      })
-
-      return
-    }
-
-    if (selectedBoardContainsItem(eventPayload.id) && !selectedBoardContainsList(eventPayload.listId)) {
-      store.commit('boards/REMOVE_ITEM', {
-        boardId: store.state.boards.selectedBoardId,
-        itemId: eventPayload.id
-      })
-
-      return
-    }
-
-    if (selectedBoardContainsItem(eventPayload.id) && selectedBoardContainsList(eventPayload.listId)) {
-      store.commit('boards/MOVE_ITEM', {
-        itemId: eventPayload.id,
-        targetListId: eventPayload.listId,
-        targetIndex: eventPayload.position
       })
     }
   }

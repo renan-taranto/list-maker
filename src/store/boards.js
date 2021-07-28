@@ -157,19 +157,25 @@ const boards = {
       const currentList = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
         .filter((list) => list != null)
         .find(list => list.items.find(item => item.id === itemId))
+      if (!currentList) {
+        return
+      }
+
       const currentItemIndex = currentList.items.findIndex(item => item.id === itemId)
+      if (currentItemIndex < 0) {
+        return
+      }
+
       const targetList = state.boards.reduce((lists, board) => lists.concat(board.lists), [])
         .filter(list => list != null)
         .find(list => list.id === targetListId)
 
-      if (currentList.id !== targetListId || currentItemIndex !== targetIndex) {
+      if (
+        targetList &&
+        (currentList.id !== targetListId || currentItemIndex !== targetIndex)
+      ) {
         targetList.items.splice(targetIndex, 0, currentList.items.splice(currentItemIndex, 1)[0])
       }
-    },
-    REMOVE_ITEM (state, { boardId, itemId }) {
-      const board = state.boards.find(b => b.id === boardId)
-      const list = board.lists.find(l => l.items.find(i => i.id === itemId))
-      list.items.splice(list.items.findIndex(i => i.id === itemId), 1)
     }
   },
   actions: {
