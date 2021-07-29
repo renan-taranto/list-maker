@@ -35,7 +35,8 @@
           <v-list-item
               v-for="link in links"
               :key="link.text"
-              link
+              :to="link.to"
+              :href="link.href"
           >
             <v-list-item-icon>
               <v-icon color="primary">{{ link.icon }}</v-icon>
@@ -108,6 +109,8 @@
             <v-btn
                 v-for="link in links"
                 :key="link.text"
+                :to="link.to"
+                :href="link.href"
                 icon
                 color="primary"
             >
@@ -133,9 +136,8 @@ export default {
     group: null,
     logoSrc: require('../../assets/logo.png'),
     links: [
-      { text: 'Home', icon: 'mdi-home-outline' },
-      { text: 'Docs', icon: 'mdi-file-document-multiple-outline' },
-      { text: 'Github', icon: 'mdi-github' }
+      { text: 'Home', icon: 'mdi-home-outline', to: '/', href: null },
+      { text: 'Github', icon: 'mdi-github', to: null, href: 'https://github.com/renan-taranto/cqrs-event-sourcing-example' }
     ]
   }),
   watch: {
