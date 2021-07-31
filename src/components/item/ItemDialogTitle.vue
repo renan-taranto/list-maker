@@ -59,7 +59,7 @@ export default {
       }
 
       if (this.item.title !== this.itemTitle) {
-        this.updateItemTitle({ itemId: this.item.id, newTitle: this.itemTitle })
+        this.updateItemTitle({ itemId: this.item.id, newTitle: this.itemTitle.trim() })
       }
     }
   },
